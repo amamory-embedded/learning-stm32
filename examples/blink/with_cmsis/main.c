@@ -2,7 +2,7 @@
 
 // Quick and dirty delay
 void delay(){
-    for (i=0; i<1000000; i++) {
+    for (int i=0; i<1000000; i++) {
         __asm__("nop");
     }
 }
