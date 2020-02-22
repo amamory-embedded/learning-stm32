@@ -2,6 +2,13 @@
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
 
+// Quick and dirty delay
+void delay(){
+    for (i=0; i<1000000; i++) {
+        __asm__("nop");
+    }
+}
+
 int main() {
     // First, let's ensure that our clock is running off the high-speed
     // internal oscillator (HSI) at 48MHz
@@ -19,9 +26,7 @@ int main() {
     uint32_t i;
     while (true) {
         gpio_toggle(GPIOC, GPIO13);
-	for (i=0; i<1000000; i++) {
-		__asm__("nop");
-	}
+        delay();
     }
 
     return 0;
