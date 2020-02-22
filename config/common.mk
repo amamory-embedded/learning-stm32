@@ -1,6 +1,6 @@
 LEARNING_STM32 = /home/lsa/stm32/learning-stm32
-MAKE_DIR = libs/STM32F10x_StdPeriph_Lib_V3.5.0
-#MAKE_DIR = libs/STM32CubeF1_V1.8.0
+#MAKE_DIR = libs/STM32F10x_StdPeriph_Lib_V3.5.0
+MAKE_DIR = libs/STM32CubeF1_V1.8.0
 
 # testing the requirements
 ifndef LEARNING_STM32
@@ -77,7 +77,7 @@ LIB_DIR  = $(patsubst %, -L%, $(LIBRARY_DIRS))
 #$(info $$SRC is [${SRC}])
 SRC_FILES = $(wildcard $(SRC))
 SRC_FILES += $(wildcard $(ASM_SRC))
-$(info $$SRC_FILES is [${SRC_FILES}])
+#$(info $$SRC_FILES is [${SRC_FILES}])
 
 # create a string with all obj names
 OBJECTS  = $(ASM_SRC:.s=.o) $(SRC_FILES:.c=.o)
@@ -86,7 +86,7 @@ OBJECTS  = $(ASM_SRC:.s=.o) $(SRC_FILES:.c=.o)
 # i have to try it again
 #SRC_FILES2 = $(notdir $(SRC_FILES))
 #OBJECTS    := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SRC_FILES2))
-$(info $$OBJECTS is [${OBJECTS}])
+#$(info $$OBJECTS is [${OBJECTS}])
 
 
 #

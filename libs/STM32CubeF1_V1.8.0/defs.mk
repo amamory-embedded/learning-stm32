@@ -3,7 +3,8 @@ PROJECT_NAME = libSTM32CubeF1
 
 # static libs dont need statup file. so live it empty
 # Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/startup/arm
-DEVICE_STARTUP = ./Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/arm/startup_stm32f103x6.s
+DEVICE_STARTUP = ./Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/startup_stm32f103x6.s
+#DEVICE_STARTUP =
 
 LINK_SCRIPT =
 
@@ -11,6 +12,7 @@ LINK_SCRIPT =
 INCLUDE_DIRS += ./Drivers/CMSIS/Core/Include
 INCLUDE_DIRS += ./Drivers/CMSIS/Device/ST/STM32F1xx/Include
 INCLUDE_DIRS += ./Drivers/STM32F1xx_HAL_Driver/Inc
+INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/include/
 INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3
 INCLUDE_DIRS += .
 
@@ -21,7 +23,6 @@ LIBRARY_DIRS +=
 SRC ?=
 SRC += ./Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/*.c
 SRC += ./Drivers/STM32F1xx_HAL_Driver/Src/*.c
-SRC += ./Middlewares/Third_Party/FreeRTOS/Source/include/*.c
 SRC += ./Middlewares/Third_Party/FreeRTOS/Source/*.c
 SRC += ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/*.c
 # you can also add cpp files
@@ -36,7 +37,7 @@ ASM_SRC +=
 
 # insert here the lib's scpecific defines
 DDEFS ?=
-DDEFS += -DHSE_VALUE=8000000
+DDEFS += -DHSE_VALUE=8000000 -DSTM32F1 -DUSE_HAL_DRIVER -DSTM32F103x6
 
 # add here any additional flags for compilation and linking
 AS_FLAGS  +=
