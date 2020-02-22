@@ -1,15 +1,15 @@
 LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 #MAKE_DIR = libs/STM32F10x_StdPeriph_Lib_V3.5.0
-MAKE_DIR = libs/STM32CubeF1_V1.8.0
+#MAKE_DIR = libs/STM32CubeF1_V1.8.0
 
 # testing the requirements
 ifndef LEARNING_STM32
     $(error LEARNING_STM32 is undefined)
 endif
 
-ifndef MAKE_DIR
-    $(error MAKE_DIR is undefined)
-endif
+#ifndef MAKE_DIR
+#    $(error MAKE_DIR is undefined)
+#endif
 
 # LEARNING_STM32 base folder
 BASE_HOME    = $(LEARNING_STM32)
@@ -37,7 +37,9 @@ AS_FLAGS = $(MC_FLAGS) -g -gdwarf-2 -mthumb
 CP_FLAGS = $(MC_FLAGS) $(OPT) -g -gdwarf-2 -mthumb -fomit-frame-pointer -fverbose-asm
 LD_FLAGS = $(MC_FLAGS) -g -gdwarf-2 -mthumb -nostartfiles -Xlinker --gc-sections
 
-include $(BASE_HOME)/$(MAKE_DIR)/defs.mk
+#include $(BASE_HOME)/$(MAKE_DIR)/defs.mk
+include $(PWD)/defs.mk
+
 #$(info $$INCLUDE_DIRS is [${INCLUDE_DIRS}])
 
 # check variables in the included makefile
@@ -65,7 +67,10 @@ endif
 INC_DIR  = $(patsubst %, -I%, $(INCLUDE_DIRS))
 # insert -L in front of every folder in LIBRARY_DIRS
 LIB_DIR  = $(patsubst %, -L%, $(LIBRARY_DIRS))
+# insert -l in front of every LIBRARY_NAMES
+LIB_NAME  = $(patsubst %, -l%, $(LIBRARY_NAMES))
 
+LD_FLAGS += $(LIB_DIR) $(LIB_NAME)
 #$(info $$INCLUDE_DIRS is [${INCLUDE_DIRS}])
 #$(info $$INC_DIR is [${INC_DIR}])
 #$(info $$LIBRARY_DIRS is [${LIBRARY_DIRS}])
@@ -117,9 +122,9 @@ $(OBJ_FOLDER):
 	mkdir $(BUILD_DIR)
 
 flash: $(PROJECT_NAME).bin
-	st-flash write $(PROJECT_NAME).bin 0x8000000
+	#st-flash write $(PROJECT_NAME).bin 0x8000000
 	# Make flash to the board by STM32CubeProgrammer v2.2.1
-	#STM32_Programmer.sh -c port=SWD -e all -d  $(PROJECT_NAME).bin 0x8000000 -v
+	STM32_Programmer.sh -c port=SWD -e all -d  $(PROJECT_NAME).bin 0x8000000 -v
 
 # rule used to create static library for the libs that are not supposed to change often: CMSIS, Std_Periph, HAL, openCM3, etc
 lib: $(OBJECTS)
