@@ -12,9 +12,9 @@ LINK_SCRIPT =
 INCLUDE_DIRS += ./Drivers/CMSIS/Core/Include
 INCLUDE_DIRS += ./Drivers/CMSIS/Device/ST/STM32F1xx/Include
 INCLUDE_DIRS += ./Drivers/STM32F1xx_HAL_Driver/Inc
-INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/include/
-INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3
-INCLUDE_DIRS += .
+#INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/
+#INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/include/
+#INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3
 
 # insert here the dir to any required library
 LIBRARY_DIRS +=
@@ -23,8 +23,8 @@ LIBRARY_DIRS +=
 SRC ?=
 SRC += ./Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/*.c
 SRC += ./Drivers/STM32F1xx_HAL_Driver/Src/*.c
-SRC += ./Middlewares/Third_Party/FreeRTOS/Source/*.c
-SRC += ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/*.c
+#SRC += ./Middlewares/Third_Party/FreeRTOS/Source/*.c
+#SRC += ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3/*.c
 # you can also add cpp files
 #SRC += ./*.cpp
 
