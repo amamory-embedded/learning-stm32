@@ -7,6 +7,11 @@ LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 #DEVICE_STARTUP =
 
 LINK_SCRIPT = $(LEARNING_STM32)/ld/stm32f103x8.ld
+#LINK_SCRIPT =
+
+#DEVICE_STARTUP = $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/startup_stm32f103x6.s
+#LINK_SCRIPT = $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/linker/STM32F103X6_FLASH.ld
+
 
 # insert here the lib's include dirs
 INCLUDE_DIRS += $(LEARNING_STM32)/libs/libopencm3/include

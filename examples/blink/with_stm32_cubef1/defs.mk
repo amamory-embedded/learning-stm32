@@ -9,6 +9,8 @@ LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 #DEVICE_STARTUP =
 
 LINK_SCRIPT =
+#LINK_SCRIPT = $(LEARNING_STM32)/ld/stm32f103x8.ld
+
 
 # insert here the lib's include dirs
 INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Core/Include
