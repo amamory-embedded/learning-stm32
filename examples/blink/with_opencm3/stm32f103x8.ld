@@ -1,0 +1,1 @@
+../../../libs/libopencm3/lib/stm32/f1/stm32f103x8.ld

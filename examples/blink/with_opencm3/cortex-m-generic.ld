@@ -1,0 +1,1 @@
+../../../libs/libopencm3/lib/cortex-m-generic.ld
