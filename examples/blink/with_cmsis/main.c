@@ -10,7 +10,6 @@ void delay(){
 int main (void) {
     // Turn on the GPIOC peripheral
     RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
-
     // Put pin 13 in general purpose push-pull mode
     GPIOC->CRH &= ~(GPIO_CRH_CNF13);
     // Set the output mode to max. 2MHz
@@ -18,13 +17,10 @@ int main (void) {
 
     while (1) {
         // Reset the state of pin 13 to output low
-        GPIOC->BSRR = GPIO_BSRR_BR13;
-
-        delay();
-
-        // Set the state of pin 13 to output high
         GPIOC->BSRR = GPIO_BSRR_BS13;
-
+        delay();
+        // Set the state of pin 13 to output high
+        GPIOC->BRR = GPIO_BSRR_BS13;
         delay();
     }
 

@@ -19,8 +19,10 @@ BUILD_DIR ?= ./build
 TOOLCHAIN    = arm-none-eabi-
 CC           = $(TOOLCHAIN)gcc
 CP           = $(TOOLCHAIN)objcopy
-AS           = $(TOOLCHAIN)gcc -x assembler-with-cpp
+#AS           = $(TOOLCHAIN)gcc -x assembler-with-cpp
+AS           = $(TOOLCHAIN)as
 AR           = $(TOOLCHAIN)ar
+GDB 		 = $(TOOLCHAIN)gdb
 HEX          = $(CP) -O ihex
 BIN          = $(CP) -O binary -S
 
@@ -33,11 +35,13 @@ OPT = -Os
 MC_FLAGS = -mcpu=$(MCU)
 
 # base flags
-AS_FLAGS = $(MC_FLAGS) -g -gdwarf-2 -mthumb
-CP_FLAGS = $(MC_FLAGS) $(OPT) -g -gdwarf-2 -mthumb -fomit-frame-pointer -fverbose-asm
-LD_FLAGS = $(MC_FLAGS) -g -gdwarf-2 -mthumb -nostartfiles -Xlinker --gc-sections
+AS_FLAGS = $(MC_FLAGS) -g -mthumb -gdwarf-2
+CP_FLAGS = $(MC_FLAGS) $(OPT) -g -mthumb -gdwarf-2
+LD_FLAGS = $(MC_FLAGS) -g -mthumb -gdwarf-2
+LD_FLAGS += -specs=nosys.specs -specs=nano.specs # # https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
+#LD_FLAGS += -Wl,--verbose #  gcc enables verbose linker output
+LD_FLAGS += -Xlinker --gc-sections
 
-#include $(BASE_HOME)/$(MAKE_DIR)/defs.mk
 include $(PWD)/defs.mk
 
 #$(info $$INCLUDE_DIRS is [${INCLUDE_DIRS}])
@@ -59,9 +63,8 @@ endif
 
 # include the statup code into to the list of ASM file
 ifdef DEVICE_STARTUP
-    ASM_SRC  += $(DEVICE_STARTUP)
+	ASM_SRC  += $(DEVICE_STARTUP)
 endif
-
 
 # insert -I in front of every folder in INCLUDE_DIRS
 INC_DIR  = $(patsubst %, -I%, $(INCLUDE_DIRS))
@@ -81,11 +84,12 @@ LD_FLAGS += $(LIB_DIR) $(LIB_NAME)
 # expand wildcards to the each source file
 #$(info $$SRC is [${SRC}])
 SRC_FILES = $(wildcard $(SRC))
-SRC_FILES += $(wildcard $(ASM_SRC))
+ASM_FILES += $(wildcard $(ASM_SRC))
 #$(info $$SRC_FILES is [${SRC_FILES}])
+#$(info $$ASM_FILES is [${ASM_FILES}])
 
 # create a string with all obj names
-OBJECTS  = $(ASM_SRC:.s=.o) $(SRC_FILES:.c=.o)
+OBJECTS  = $(ASM_FILES:.s=.o) $(SRC_FILES:.c=.o)
 # I was trying to place all obj files under the BUILD_DIR, similar to
 # https://spin.atomicobject.com/2016/08/26/makefile-c-projects/, but it didnt work
 # i have to try it again
@@ -130,11 +134,14 @@ flash: $(PROJECT_NAME).bin
 lib: $(OBJECTS)
 	$(AR) -r -s $(PROJECT_NAME).a $(OBJECTS)
 
+debug:	$(PROJECT_NAME).elf
+	$(GDB) --eval-command="target extended-remote :4242" $(PROJECT_NAME).elf
+
 erase:
 	st-flash erase
 
 clean:
-	#-rm -rf $(OBJECTS)
+	-rm -rf $(OBJECTS)
 	-find . -type f -name '*.o' -delete
 	-rm -rf $(BUILD_DIR)
 	-rm -rf $(PROJECT_NAME).elf
@@ -142,6 +149,4 @@ clean:
 	-rm -rf $(PROJECT_NAME).hex
 	-rm -rf $(PROJECT_NAME).bin
 	-rm -rf $(PROJECT_NAME).a
-	#-rm -rf $(SRC:.c=.lst)
-	#-rm -rf $(ASM_SRC:.s=.lst)
 
