@@ -3,14 +3,9 @@ PROJECT_NAME = main
 
 LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 
-# static libs dont need statup file. so live it empty
-# Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/startup/arm
-#DEVICE_STARTUP = $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/startup_stm32f103x6.s
-#DEVICE_STARTUP =
-
-LINK_SCRIPT =
-#LINK_SCRIPT = $(LEARNING_STM32)/ld/stm32f103x8.ld
-
+# startup file and linker script
+DEVICE_STARTUP = ./startup_stm32f103x6.s
+LINK_SCRIPT = ./STM32F103X6_FLASH.ld
 
 # insert here the lib's include dirs
 INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Core/Include
@@ -22,7 +17,6 @@ INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/STM32F1xx_HAL_
 
 # insert here the dir to any required library
 LIBRARY_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/
-#LIBRARY_DIRS += $(LEARNING_STM32)/ld
 
 # insert here the names of the required library
 LIBRARY_NAMES += STM32CubeF1

@@ -1,0 +1,1 @@
+../../../libs/STM32CubeF1_V1.8.0/./Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/linker/STM32F103X6_FLASH.ld
