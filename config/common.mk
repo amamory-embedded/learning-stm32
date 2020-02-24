@@ -40,7 +40,6 @@ AS_FLAGS = $(MC_FLAGS) -g -mthumb
 CP_FLAGS = $(MC_FLAGS) $(OPT) -g -mthumb
 CP_FLAGS += -ffunction-sections -fdata-sections  # for optimising text and data memory
 CP_FLAGS += -flto
-#CP_FLAGS += -nostartfiles
 
 LD_FLAGS = $(MC_FLAGS) -g -mthumb
 LD_FLAGS += -specs=nosys.specs -specs=nano.specs # # https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
@@ -50,7 +49,6 @@ LD_FLAGS += -Wextra -Wall # extra messages
 # http://blog.atollic.com/the-ultimate-guide-to-reducing-code-size-with-gnu-gcc-for-arm-cortex-m
 LD_FLAGS += -ffunction-sections -fdata-sections # remove unused functions and data
 LD_FLAGS += -flto # link time optimizer
-#LD_FLAGS += -nostartfiles
 LD_FLAGS += -Xlinker --gc-sections
 
 include $(PWD)/defs.mk
