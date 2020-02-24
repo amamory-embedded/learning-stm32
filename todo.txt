@@ -1,6 +1,5 @@
 TODO
 
-- refazer o with_stm32_cubef1 pois esta igual ao with CMSIS
 - fazer with_nodeps
 - fazer with_arduino
 - fazer with_freertos

@@ -1,6 +1,5 @@
 LEARNING_STM32 = /home/lsa/stm32/learning-stm32
-#MAKE_DIR = libs/STM32F10x_StdPeriph_Lib_V3.5.0
-#MAKE_DIR = libs/STM32CubeF1_V1.8.0
+#DEBUG	  = 1
 
 # testing the requirements
 ifndef LEARNING_STM32
@@ -14,10 +13,6 @@ Q := @
 MAKEFLAGS += --no-print-directory
 endif
 
-#ifndef MAKE_DIR
-#    $(error MAKE_DIR is undefined)
-#endif
-
 # LEARNING_STM32 base folder
 BASE_HOME    = $(LEARNING_STM32)
 BUILD_DIR ?= ./build
@@ -26,7 +21,6 @@ BUILD_DIR ?= ./build
 TOOLCHAIN    = arm-none-eabi-
 CC           = $(TOOLCHAIN)gcc
 CP           = $(TOOLCHAIN)objcopy
-#AS           = $(TOOLCHAIN)gcc -x assembler-with-cpp
 AS           = $(TOOLCHAIN)as
 AR           = $(TOOLCHAIN)ar
 GDB 		 = $(TOOLCHAIN)gdb
@@ -34,26 +28,32 @@ SIZE 		 = $(TOOLCHAIN)size
 HEX          = $(CP) -O ihex
 BIN          = $(CP) -O binary -S
 
+# tools
+SIZE_SCRIPT = $(LEARNING_STM32)/utils/get-size.sh
+
 # define mcu, specify the target processor
-MCU          = cortex-m3
-
-# Define optimisation level here
-OPT = -Os
-#OPT = -Og -ggdb3 # for debug mode
-
+MCU      = cortex-m3
 MC_FLAGS = -mcpu=$(MCU)
 
 # base flags
-AS_FLAGS = $(MC_FLAGS) -g -mthumb
-CP_FLAGS = $(MC_FLAGS) $(OPT) -g -mthumb
-#
+AS_FLAGS = $(MC_FLAGS) -mthumb
+CP_FLAGS = $(MC_FLAGS) -mthumb
+LD_FLAGS = $(MC_FLAGS) -mthumb
+
+# Define optimisation level here
+ifdef DEBUG
+    CP_FLAGS   += -Og
+    CP_FLAGS   += -g3
+else
+    CP_FLAGS   += -Os
+    #CP_FLAGS += -flto # link time optimizer. for the tests i did, it infact increased memory usage
+endif
+
 CP_FLAGS += -ffunction-sections # # Generate separate ELF section for each function.
 # usefull for static libraries since it possible to benefit from more efficient dead code removal.
 # check https://elinux.org/images/2/2d/ELC2010-gc-sections_Denys_Vlasenko.pdf for more
 CP_FLAGS += -fdata-sections  # # Enable elf section per variable
-#CP_FLAGS += -flto # link time optimizer. for the tests i did, it infact increased memory usage
 
-LD_FLAGS = $(MC_FLAGS) -g -mthumb
 LD_FLAGS += -specs=nosys.specs  # Stub library with empty definitions for POSIX functions
 LD_FLAGS += -specs=nano.specs # newlibnano https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
 #LD_FLAGS += -Wl,--verbose #  gcc enables verbose linker output
@@ -67,6 +67,10 @@ LD_FLAGS += -fdata-sections  # # Enable elf section per variable
 LD_FLAGS += -Xlinker --gc-sections ## Perform dead-code elimination
 #LD_FLAGS += -Xlinker --print-gc-sections # shows the removed sections. uncommnet it just if you want the investigate the removed sections
 LD_FLAGS += -Wl,-Map=${PROJECT_NAME}.map # Generate a memory map. The map file is a symbol table for the whole program
+#LD_FLAGS += -Wl,--print-memory-usage # prints something like this
+#Memory region         Used Size  Region Size  %age Used
+#             rom:       10800 B       256 KB      4.12%
+#             ram:        8376 B        32 KB     25.56%
 
 include $(PWD)/defs.mk
 
@@ -133,6 +137,8 @@ all: init_rule $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAM
 	$(Q)$(SIZE) $(PROJECT_NAME).elf
 	@printf "  MEM REPORT  $(PROJECT_NAME).elf\n"
 	$(Q)python $(LEARNING_STM32)/utils/linker-map-summary/analyze_map.py $(PROJECT_NAME).map
+	@printf "\n"
+	$(Q)$(SIZE_SCRIPT)	$(PROJECT_NAME).elf 0x10000 0x5000
 	@echo "\\033[1;33m \t\t----------REPORTS FINISHED---------- \\033[0;39m"
 
 %.o: %.c | $(OBJ_FOLDER)
@@ -166,8 +172,8 @@ $(OBJ_FOLDER):
 	$(Q)mkdir $(BUILD_DIR)
 
 flash: $(PROJECT_NAME).bin
-	#st-flash write $(PROJECT_NAME).bin 0x8000000
-	# Make flash to the board by STM32CubeProgrammer v2.2.1
+	@#st-flash write $(PROJECT_NAME).bin 0x8000000
+	@# Make flash to the board by STM32CubeProgrammer v2.2.1
 	STM32_Programmer.sh -c port=SWD -e all -d  $(PROJECT_NAME).bin 0x8000000 -v
 
 # rule used to create static library for the libs that are not supposed to change often: CMSIS, Std_Periph, HAL, openCM3, etc
@@ -176,7 +182,13 @@ lib: init_rule $(OBJECTS)
 	$(Q)$(AR) -r -s $(PROJECT_NAME).a $(OBJECTS)
 	@echo "\\033[1;33m \t\t----------COMPILATION FINISHED---------- \\033[0;39m"
 	@printf "\n  REPORT    $(PROJECT_NAME).a\n"
-	$(Q)$(AR) -tv $(PROJECT_NAME).a | sort -k 3n # reporting objs included into the statis library and sort it by its size
+	@# reporting objs included into the statis library and sort it by its size
+	$(Q)$(AR) -tv $(PROJECT_NAME).a | sort -k 3n
+	@# report text, data, bss and total size for each object. Then, use awk to sum these values and present the total
+	$(Q)$(SIZE) -d -G libSTM32CubeF1.a | awk '{c1+=$$1; c2+=$$2; c3+=$$3; c4+=$$4} END {printf "Text size: %.0f\n", c1; printf "Data size: %.0f\n", c2; printf "BSS size: %.0f\n", c3;  printf "Total size: %.0f\n", c4}'
+	@# print the % of flash and ram usage considering 64K of flash and 20K of RAM
+	@printf "\n"
+	$(Q)$(SIZE_SCRIPT)	$(PROJECT_NAME).a 0x10000 0x5000 lib
 	@echo "\\033[1;33m \t\t----------STATIC LIB FINISHED------------ \\033[0;39m"
 
 debug:	$(PROJECT_NAME).elf
