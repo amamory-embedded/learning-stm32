@@ -38,7 +38,10 @@ MC_FLAGS = -mcpu=$(MCU)
 # base flags
 AS_FLAGS = $(MC_FLAGS) -g -mthumb
 CP_FLAGS = $(MC_FLAGS) $(OPT) -g -mthumb
-CP_FLAGS += -ffunction-sections # # Generate separate ELF section for each function. usefull for static libraries
+#
+CP_FLAGS += -ffunction-sections # # Generate separate ELF section for each function.
+# usefull for static libraries since it possible to benefit from more efficient dead code removal.
+# check https://elinux.org/images/2/2d/ELC2010-gc-sections_Denys_Vlasenko.pdf for more
 CP_FLAGS += -fdata-sections  # # Enable elf section per variable
 #CP_FLAGS += -flto # link time optimizer. for the tests i did, it infact increased memory usage
 
@@ -54,6 +57,7 @@ LD_FLAGS += -ffunction-sections # # Generate separate ELF section for each funct
 LD_FLAGS += -fdata-sections  # # Enable elf section per variable
 #LD_FLAGS += -flto # link time optimizer. for the tests i did, it infact increased memory usage
 LD_FLAGS += -Xlinker --gc-sections ## Perform dead-code elimination
+#LD_FLAGS += -Xlinker --print-gc-sections # shows the removed sections. uncommnet it just if you want the investigate the removed sections
 LD_FLAGS += -Wl,-Map=${PROJECT_NAME}.map # Generate a memory map. The map file is a symbol table for the whole program
 
 include $(PWD)/defs.mk
@@ -117,6 +121,7 @@ OBJECTS  = $(ASM_FILES:.s=.o) $(SRC_FILES:.c=.o)
 #
 all: $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAME).bin
 	$(TOOLCHAIN)size $(PROJECT_NAME).elf
+	python $(LEARNING_STM32)/utils/linker-map-summary-master/analyze_map.py $(PROJECT_NAME).map
 
 %.o: %.c | $(OBJ_FOLDER)
 	$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
@@ -147,6 +152,8 @@ flash: $(PROJECT_NAME).bin
 # rule used to create static library for the libs that are not supposed to change often: CMSIS, Std_Periph, HAL, openCM3, etc
 lib: $(OBJECTS)
 	$(AR) -r -s $(PROJECT_NAME).a $(OBJECTS)
+	$(AR) -t $(PROJECT_NAME).a # reporting objs included into the statis library
+	python $(LEARNING_STM32)/utils/linker-map-summary-master/analyze_map.py $(PROJECT_NAME).map
 
 debug:	$(PROJECT_NAME).elf
 	$(GDB) --eval-command="target extended-remote :4242" $(PROJECT_NAME).elf

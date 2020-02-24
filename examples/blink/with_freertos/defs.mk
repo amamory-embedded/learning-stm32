@@ -11,6 +11,9 @@ LINK_SCRIPT = ./STM32F103X6_FLASH.ld
 INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Core/Include
 INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Include
 INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/STM32F1xx_HAL_Driver/Inc
+#INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/
+#INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/include/
+#INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3
 
 # insert here the dir to any required library
 LIBRARY_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/

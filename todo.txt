@@ -5,4 +5,8 @@ TODO
 - fazer with_arduino
 - fazer with_freertos
 - make a c++ version based on the book "Real-Time C++: Efficient Object-Oriented and Template Microcontroller"
+- include examples with rust
 
+estudar sites:
+https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
+https://interrupt.memfault.com/blog/get-the-most-out-of-the-linker-map-file
