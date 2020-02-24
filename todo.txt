@@ -4,3 +4,5 @@ TODO
 - fazer with_nodeps
 - fazer with_arduino
 - fazer with_freertos
+- make a c++ version based on the book "Real-Time C++: Efficient Object-Oriented and Template Microcontroller"
+

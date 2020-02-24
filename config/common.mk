@@ -31,25 +31,30 @@ MCU          = cortex-m3
 
 # Define optimisation level here
 OPT = -Os
-#OPT = -Og # for debug mode
+#OPT = -Og -ggdb3 # for debug mode
 
 MC_FLAGS = -mcpu=$(MCU)
 
 # base flags
 AS_FLAGS = $(MC_FLAGS) -g -mthumb
 CP_FLAGS = $(MC_FLAGS) $(OPT) -g -mthumb
-CP_FLAGS += -ffunction-sections -fdata-sections  # for optimising text and data memory
-CP_FLAGS += -flto
+CP_FLAGS += -ffunction-sections # # Generate separate ELF section for each function. usefull for static libraries
+CP_FLAGS += -fdata-sections  # # Enable elf section per variable
+#CP_FLAGS += -flto # link time optimizer. for the tests i did, it infact increased memory usage
 
 LD_FLAGS = $(MC_FLAGS) -g -mthumb
-LD_FLAGS += -specs=nosys.specs -specs=nano.specs # # https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
+LD_FLAGS += -specs=nosys.specs  # Stub library with empty definitions for POSIX functions
+LD_FLAGS += -specs=nano.specs # newlibnano https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
 #LD_FLAGS += -Wl,--verbose #  gcc enables verbose linker output
 LD_FLAGS += -Wextra -Wall # extra messages
 #https://interrupt.memfault.com/blog/get-the-most-out-of-the-linker-map-file
 # http://blog.atollic.com/the-ultimate-guide-to-reducing-code-size-with-gnu-gcc-for-arm-cortex-m
-LD_FLAGS += -ffunction-sections -fdata-sections # remove unused functions and data
-LD_FLAGS += -flto # link time optimizer
-LD_FLAGS += -Xlinker --gc-sections
+#https://stackoverflow.com/questions/4274804/query-on-ffunction-section-fdata-sections-options-of-gcc
+LD_FLAGS += -ffunction-sections # # Generate separate ELF section for each function. usefull for static libraries
+LD_FLAGS += -fdata-sections  # # Enable elf section per variable
+#LD_FLAGS += -flto # link time optimizer. for the tests i did, it infact increased memory usage
+LD_FLAGS += -Xlinker --gc-sections ## Perform dead-code elimination
+LD_FLAGS += -Wl,-Map=${PROJECT_NAME}.map # Generate a memory map. The map file is a symbol table for the whole program
 
 include $(PWD)/defs.mk
 

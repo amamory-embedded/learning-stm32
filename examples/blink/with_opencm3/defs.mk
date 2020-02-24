@@ -37,4 +37,4 @@ DDEFS += -DSTM32F1
 AS_FLAGS  +=
 CP_FLAGS  +=
 CXX_FLAGS +=
-LD_FLAGS  += -nostartfiles
+LD_FLAGS  += -nostartfiles # No standard lib startup files
