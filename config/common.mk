@@ -7,6 +7,13 @@ ifndef LEARNING_STM32
     $(error LEARNING_STM32 is undefined)
 endif
 
+# Be silent per default, but 'make V=1' will show all compiler calls.
+ifneq ($(V),1)
+Q := @
+# Do not print "Entering directory ...".
+MAKEFLAGS += --no-print-directory
+endif
+
 #ifndef MAKE_DIR
 #    $(error MAKE_DIR is undefined)
 #endif
@@ -23,6 +30,7 @@ CP           = $(TOOLCHAIN)objcopy
 AS           = $(TOOLCHAIN)as
 AR           = $(TOOLCHAIN)ar
 GDB 		 = $(TOOLCHAIN)gdb
+SIZE 		 = $(TOOLCHAIN)size
 HEX          = $(CP) -O ihex
 BIN          = $(CP) -O binary -S
 
@@ -68,7 +76,7 @@ include $(PWD)/defs.mk
 ifndef PROJECT_NAME
     $(error Please set the required PROJECT_NAME variable in your makefile.)
 endif
-$(info $$PROJECT_NAME is [${PROJECT_NAME}])
+#$(info PROJECT_NAME = ${PROJECT_NAME})
 
 # adds -T in front of the linker script file
 ifdef LINK_SCRIPT
@@ -119,30 +127,43 @@ OBJECTS  = $(ASM_FILES:.s=.o) $(SRC_FILES:.c=.o)
 #
 # makefile rules
 #
-all: $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAME).bin
-	$(TOOLCHAIN)size $(PROJECT_NAME).elf
-	python $(LEARNING_STM32)/utils/linker-map-summary-master/analyze_map.py $(PROJECT_NAME).map
+all: init_rule $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAME).bin
+	@echo "\\033[1;33m \t\t----------COMPILATION FINISHED---------- \\033[0;39m"
+	@printf "\n  SIZE        $(PROJECT_NAME).elf\n"
+	$(Q)$(SIZE) $(PROJECT_NAME).elf
+	@printf "  MEM REPORT  $(PROJECT_NAME).elf\n"
+	$(Q)python $(LEARNING_STM32)/utils/linker-map-summary/analyze_map.py $(PROJECT_NAME).map
+	@echo "\\033[1;33m \t\t----------REPORTS FINISHED---------- \\033[0;39m"
 
 %.o: %.c | $(OBJ_FOLDER)
-	$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
+	@printf "  CC      $<\n"
+	$(Q)$(CC) -c $(CP_FLAGS) -I . $(INC_DIR) $< -o $@
 
 %.o: %.cpp | $(OBJ_FOLDER)
-	$(CC) -c $(CP_FLAGS) $(CXX_FLAGS) -I . $(INC_DIR) $< -o $@
+	@printf "  CXX     $<\n"
+	$(Q)$(CC) -c $(CP_FLAGS) $(CXX_FLAGS) -I . $(INC_DIR) $< -o $@
 
 %.o: %.s | $(OBJ_FOLDER)
-	$(AS) -c $(AS_FLAGS) $< -o $@
+	@printf "  AS      $<\n"
+	$(Q)$(AS) -c $(AS_FLAGS) $< -o $@
 
 %.elf: $(OBJECTS)
-	$(CC) $(OBJECTS) $(LD_FLAGS) -o $@
+	@printf "  LD      $(*).elf\n"
+	$(Q)$(CC) $(OBJECTS) $(LD_FLAGS) -o $@
 
 %.hex: %.elf
-	$(HEX) $< $@
+	@printf "  OBJCOPY $@\n"
+	$(Q)$(HEX) $< $@
 
 %.bin: %.elf
-	$(BIN)  $< $@
+	@printf "  OBJCOPY $@\n"
+	$(Q)$(BIN)  $< $@
+
+init_rule:
+	@echo "\\033[1;33m \t\t----------COMPILATION STARTED----------- \\033[0;39m"
 
 $(OBJ_FOLDER):
-	mkdir $(BUILD_DIR)
+	$(Q)mkdir $(BUILD_DIR)
 
 flash: $(PROJECT_NAME).bin
 	#st-flash write $(PROJECT_NAME).bin 0x8000000
@@ -150,24 +171,28 @@ flash: $(PROJECT_NAME).bin
 	STM32_Programmer.sh -c port=SWD -e all -d  $(PROJECT_NAME).bin 0x8000000 -v
 
 # rule used to create static library for the libs that are not supposed to change often: CMSIS, Std_Periph, HAL, openCM3, etc
-lib: $(OBJECTS)
-	$(AR) -r -s $(PROJECT_NAME).a $(OBJECTS)
-	$(AR) -t $(PROJECT_NAME).a # reporting objs included into the statis library
-	python $(LEARNING_STM32)/utils/linker-map-summary-master/analyze_map.py $(PROJECT_NAME).map
+lib: init_rule $(OBJECTS)
+	@printf "\n  STATIC LIB  $(PROJECT_NAME).a\n"
+	$(Q)$(AR) -r -s $(PROJECT_NAME).a $(OBJECTS)
+	@echo "\\033[1;33m \t\t----------COMPILATION FINISHED---------- \\033[0;39m"
+	@printf "\n  REPORT    $(PROJECT_NAME).a\n"
+	$(Q)$(AR) -tv $(PROJECT_NAME).a | sort -k 3n # reporting objs included into the statis library and sort it by its size
+	@echo "\\033[1;33m \t\t----------STATIC LIB FINISHED------------ \\033[0;39m"
 
 debug:	$(PROJECT_NAME).elf
 	$(GDB) --eval-command="target extended-remote :4242" $(PROJECT_NAME).elf
 
 erase:
-	st-flash erase
+	$(Q)st-flash erase
 
 clean:
-	-rm -rf $(OBJECTS)
-	-find . -type f -name '*.o' -delete
-	-rm -rf $(BUILD_DIR)
-	-rm -rf $(PROJECT_NAME).elf
-	-rm -rf $(PROJECT_NAME).map
-	-rm -rf $(PROJECT_NAME).hex
-	-rm -rf $(PROJECT_NAME).bin
-	-rm -rf $(PROJECT_NAME).a
+	$(Q)-rm -rf $(OBJECTS)
+	$(Q)-find . -type f -name '*.o' -delete
+	$(Q)-rm -rf $(BUILD_DIR)
+	$(Q)-rm -rf $(PROJECT_NAME).elf
+	$(Q)-rm -rf $(PROJECT_NAME).map
+	$(Q)-rm -rf $(PROJECT_NAME).hex
+	$(Q)-rm -rf $(PROJECT_NAME).bin
+	$(Q)-rm -rf $(PROJECT_NAME).a
+	@echo "\\033[1;33m \t\t----------DONE CLEANING--------------- \\033[0;39m"
 
