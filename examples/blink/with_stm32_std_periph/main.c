@@ -2,16 +2,12 @@
 #include "stm32f10x_rcc.h"
 #include "stm32f10x_gpio.h"
 
-//#include "stm32_p103.h"
-
 // Quick and dirty delay
 void delay(){
     for (int i=0; i<1000000; i++) {
         __asm__("nop");
     }
 }
-
-
 
 void init_led(void)
 {
@@ -24,12 +20,13 @@ void init_led(void)
      * between power and the microcontroller pin, which makes it turn on when
      * the pin is low.
      */
-    GPIO_WriteBit(GPIOC,GPIO_Pin_12,Bit_SET);
+    GPIO_WriteBit(GPIOC,GPIO_Pin_13,Bit_SET);
 
     /* Configure the LED pin as push-pull output. */
-    GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_12;
+    GPIO_StructInit(&GPIO_InitStructure);
+    GPIO_InitStructure.GPIO_Pin =  GPIO_Pin_13;
     GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;
-    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
+    GPIO_InitStructure.GPIO_Speed = GPIO_Speed_2MHz;
     GPIO_Init(GPIOC, &GPIO_InitStructure);
 }
 
@@ -38,9 +35,9 @@ int main(void)
     init_led();
 
     while(1) {
-       GPIOC->BRR = 0x00001000;
+       GPIO_WriteBit(GPIOC, GPIO_Pin_13,Bit_SET);
        delay();
-       GPIOC->BSRR = 0x00001000;
+       GPIO_WriteBit(GPIOC, GPIO_Pin_13,Bit_RESET);
        delay();
     }
 }

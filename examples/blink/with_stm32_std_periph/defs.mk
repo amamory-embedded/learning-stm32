@@ -3,10 +3,9 @@ PROJECT_NAME = main
 
 LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 
-# static libs dont need statup file. so live it empty
-#DEVICE_STARTUP = $(LEARNING_STM32)/ld/startup_stm32f10x_md.s
-
-#LINK_SCRIPT = $(LEARNING_STM32)/ld/stm32f103x8.ld
+# startup and linker script files
+DEVICE_STARTUP = ./startup_stm32f10x_md.s
+LINK_SCRIPT = ./stm32_flash.ld
 
 # insert here the lib's include dirs
 INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32F10x_StdPeriph_Lib_V3.5.0/Libraries/CMSIS/CM3/CoreSupport
@@ -16,7 +15,6 @@ INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32F10x_StdPeriph_Lib_V3.5.0/.
 
 # insert here the dir to any required library
 LIBRARY_DIRS += $(LEARNING_STM32)/libs/STM32F10x_StdPeriph_Lib_V3.5.0/
-LIBRARY_DIRS += $(LEARNING_STM32)/ld
 
 # insert here the names of the required library
 LIBRARY_NAMES += StdPeriph
@@ -37,7 +35,6 @@ ASM_SRC +=
 # insert here the lib's scpecific defines
 DDEFS ?=
 DDEFS += -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=8000000 -DRUN_FROM_FLASH=1
-
 
 # add here any additional flags for compilation and linking
 AS_FLAGS  +=
