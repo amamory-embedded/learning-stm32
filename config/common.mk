@@ -182,10 +182,11 @@ lib: init_rule $(OBJECTS)
 	$(Q)$(AR) -r -s $(PROJECT_NAME).a $(OBJECTS)
 	@echo "\\033[1;33m \t\t----------COMPILATION FINISHED---------- \\033[0;39m"
 	@printf "\n  REPORT    $(PROJECT_NAME).a\n"
-	@# reporting objs included into the statis library and sort it by its size
-	$(Q)$(AR) -tv $(PROJECT_NAME).a | sort -k 3n
+	@# reporting objs included into the static library, removed unwanted coluns with awk, and sort the objs by their sizes
+	$(Q)$(AR) -tv $(PROJECT_NAME).a | awk '{printf "%8s %s\n", $$3, $$8}' | sort -k 1n
 	@# report text, data, bss and total size for each object. Then, use awk to sum these values and present the total
-	$(Q)$(SIZE) -d -G libSTM32CubeF1.a | awk '{c1+=$$1; c2+=$$2; c3+=$$3; c4+=$$4} END {printf "Text size: %.0f\n", c1; printf "Data size: %.0f\n", c2; printf "BSS size: %.0f\n", c3;  printf "Total size: %.0f\n", c4}'
+	@printf "\n"
+	$(Q)$(SIZE) -d -G $(PROJECT_NAME).a | awk '{c1+=$$1; c2+=$$2; c3+=$$3; c4+=$$4} END {printf "Text size: %.0f\n", c1; printf "Data size: %.0f\n", c2; printf "BSS size: %.0f\n", c3;  printf "Total size: %.0f\n", c4}'
 	@# print the % of flash and ram usage considering 64K of flash and 20K of RAM
 	@printf "\n"
 	$(Q)$(SIZE_SCRIPT)	$(PROJECT_NAME).a 0x10000 0x5000 lib
