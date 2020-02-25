@@ -50,6 +50,6 @@ CP_FLAGS += -Wextra
 CXX_FLAGS +=
 LD_FLAGS  +=
 # No standard lib startup files
-#LD_FLAGS  += -nostartfiles
-#LD_FLAGS  += -nostdlib
+LD_FLAGS  += -nostartfiles
+LD_FLAGS  += -nostdlib
 LD_FLAGS  += -Xlinker --gc-sections ## Perform dead-code elimination

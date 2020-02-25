@@ -6,3 +6,12 @@ cd ../../examples/blink/with_stm32_cubef1
 make -f ../../../config/common.mk all
 make -f ../../../config/common.mk flash
 
+open startup_stm32f103x6.s and comment the line 95
+'''
+/*bl __libc_init_array*/
+'''
+
+This will remove this dependency with libc, allowing to compile the desing with the flags -nostartfiles and -nostdlib,
+saving some memory. Note that the objects crti.o, crtn.o lib_a-memset.o crtbegin.o are not references anymore.
+
+
