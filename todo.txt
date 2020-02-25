@@ -2,23 +2,6 @@ TODO
 
 - compilar lib com e sem debug
 - como compilar opencm3 p debug mode e c stack check ?
-- std_periph error
-	~/stm32/learning-stm32/libs/STM32F10x_StdPeriph_Lib_V3.5.0$ make -f ../../config/common.mk clean lib DEBUG=1
-	$STACK_SIZE is [255]
-	 		----------DONE CLEANING-----------------
-	 		----------COMPILATION STARTED-----------
-	  CC      Libraries/CMSIS/CM3/CoreSupport/core_cm3.c
-	/tmp/ccX5POjy.s: Assembler messages:
-	/tmp/ccX5POjy.s:912: Error: registers may not be the same -- `strexb r2,r2,[r3]'
-	/tmp/ccX5POjy.s:962: Error: registers may not be the same -- `strexh r2,r2,[r3]'
-
-  se nao tiver CP_FLAGS   += -Os nao funciona
-- stm_cubef1 nao esta compilando com
-LD_FLAGS  += -nostartfiles
-LD_FLAGS  += -nostdlib
-arm-none-eabi/lib/thumb/v7-m/nofp/libc.a(lib_a-init.o): in function `__libc_init_array':
-init.c:(.text.__libc_init_array+0x1e): undefined reference to `_init'
-
 - fazer with_arduino
 - fazer with_freertos
 - make a c++ version based on the book "Real-Time C++: Efficient Object-Oriented and Template Microcontroller"
@@ -38,3 +21,8 @@ https://github.com/HBehrens/puncover
 this makes clear what GCC macros will be set automatically and the value.
 arm-none-eabi-gcc -E -dM - < /dev/null
 
+lower priority issues
+- update std_periph to v3.6.1 - the oficial in the STM site is still 3.5.0
+https://github.com/philpem/STM32_SPL/blob/master/STM32F10x_StdPeriph_Driver/Release_Notes.html
+https://github.com/philpem/STM32_SPL/tree/master/Templates/STM32F10x_StdPeriph_Template
+  se nao tiver CP_FLAGS   += -Os nao funciona

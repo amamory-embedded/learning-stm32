@@ -1,10 +1,21 @@
 # the name of the executable or lib file
 PROJECT_NAME = libSTM32CubeF1
 
+# when the flag -Os is removed, as in debug mode, the compilation fails with these two error:
+#  CC      Libraries/CMSIS/CM3/CoreSupport/core_cm3.c
+#/tmp/ccPyyafK.s: Assembler messages:
+#/tmp/ccPyyafK.s:912: Error: registers may not be the same -- `strexb r2,r2,[r3]'
+#/tmp/ccPyyafK.s:962: Error: registers may not be the same -- `strexh r2,r2,[r3]'
+#
+# I had to apply a fix in the file Libraries/CMSIS/CM3/CoreSupport/core_cm3.c, lines 736
+#   __ASM volatile ("strexb %0, %2, [%1]" : "=&r" (result) : "r" (addr), "r" (value) );
+# and 755
+#   __ASM volatile ("strexh %0, %2, [%1]" : "=&r" (result) : "r" (addr), "r" (value) );
+#As suggested in https://github.com/texane/stlink/issues/65 and https://gist.github.com/timbrom/1942280
+#It is necessary to replace '=r (result)' by '=&r (result)' in both cases.
+
 # static libs dont need statup file. so live it empty
-# Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/startup/arm
 DEVICE_STARTUP = ./Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/gcc/startup_stm32f103x6.s
-#DEVICE_STARTUP =
 
 LINK_SCRIPT =
 
