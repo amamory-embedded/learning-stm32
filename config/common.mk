@@ -64,7 +64,6 @@ LD_FLAGS += -Wextra -Wall # extra messages
 LD_FLAGS += -ffunction-sections # # Generate separate ELF section for each function. usefull for static libraries
 LD_FLAGS += -fdata-sections  # # Enable elf section per variable
 #LD_FLAGS += -flto # link time optimizer. for the tests i did, it infact increased memory usage
-LD_FLAGS += -Xlinker --gc-sections ## Perform dead-code elimination
 #LD_FLAGS += -Xlinker --print-gc-sections # shows the removed sections. uncommnet it just if you want the investigate the removed sections
 LD_FLAGS += -Wl,-Map=${PROJECT_NAME}.map # Generate a memory map. The map file is a symbol table for the whole program
 #LD_FLAGS += -Wl,--print-memory-usage # prints something like this
@@ -139,7 +138,7 @@ all: init_rule $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAM
 	$(Q)python $(LEARNING_STM32)/utils/linker-map-summary/analyze_map.py $(PROJECT_NAME).map
 	@printf "\n"
 	$(Q)$(SIZE_SCRIPT)	$(PROJECT_NAME).elf 0x10000 0x5000
-	@echo "\\033[1;33m \t\t----------REPORTS FINISHED---------- \\033[0;39m"
+	@echo "\\033[1;33m \t\t----------REPORTS FINISHED----------- \\033[0;39m"
 
 %.o: %.c | $(OBJ_FOLDER)
 	@printf "  CC      $<\n"
@@ -190,7 +189,7 @@ lib: init_rule $(OBJECTS)
 	@# print the % of flash and ram usage considering 64K of flash and 20K of RAM
 	@printf "\n"
 	$(Q)$(SIZE_SCRIPT)	$(PROJECT_NAME).a 0x10000 0x5000 lib
-	@echo "\\033[1;33m \t\t----------STATIC LIB FINISHED------------ \\033[0;39m"
+	@echo "\\033[1;33m \t\t----------REPORTS FINISHED----------- \\033[0;39m"
 
 debug:	$(PROJECT_NAME).elf
 	$(GDB) --eval-command="target extended-remote :4242" $(PROJECT_NAME).elf
@@ -207,5 +206,5 @@ clean:
 	$(Q)-rm -rf $(PROJECT_NAME).hex
 	$(Q)-rm -rf $(PROJECT_NAME).bin
 	$(Q)-rm -rf $(PROJECT_NAME).a
-	@echo "\\033[1;33m \t\t----------DONE CLEANING--------------- \\033[0;39m"
+	@echo "\\033[1;33m \t\t----------DONE CLEANING----------------- \\033[0;39m"
 

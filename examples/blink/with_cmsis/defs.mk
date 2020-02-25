@@ -45,3 +45,4 @@ AS_FLAGS  +=
 CP_FLAGS  +=
 CXX_FLAGS +=
 LD_FLAGS  +=
+LD_FLAGS  += -Xlinker --gc-sections ## Perform dead-code elimination
