@@ -40,9 +40,23 @@ DDEFS ?=
 #DDEFS += -DHSE_VALUE=8000000 -DSTM32F1 -DUSE_HAL_DRIVER -DSTM32F103x6
 DDEFS += -DSTM32F103x6
 
+# insert the max size of the stack. the -Wstack-usage flag will make sure that this limit is not hit
+STACK_SIZE = 255
+
 # add here any additional flags for compilation and linking
 AS_FLAGS  +=
 CP_FLAGS  +=
+#enables a base set of warnings generally agreed upon as being useful
+CP_FLAGS += -Wall
+#enables an additional set of flags not covered by -Wall
+CP_FLAGS += -Wextra
+#causes all enabled warnings to cause compilation errors.
+CP_FLAGS += -Werror
 CXX_FLAGS +=
 LD_FLAGS  +=
-LD_FLAGS  += -Xlinker --gc-sections ## Perform dead-code elimination
+# This tells GCC to ignore everything it knows about where to find header files and libraries and instead uses what you tell it
+# it does not include  crtbegin.o, crt1.o, crti.o, crtend.o, crtn.o
+# http://cs107e.github.io/guides/gcc/
+LD_FLAGS  += -nostdlib
+## Perform dead-code elimination
+LD_FLAGS  += -Xlinker --gc-sections

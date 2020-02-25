@@ -23,7 +23,6 @@ int main() {
 		      GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
 
     // Now, let's forever toggle this LED back and forth
-    uint32_t i;
     while (true) {
         gpio_toggle(GPIOC, GPIO13);
         delay();

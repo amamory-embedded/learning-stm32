@@ -42,30 +42,45 @@ LD_FLAGS = $(MC_FLAGS) -mthumb
 
 # Define optimisation level here
 ifdef DEBUG
-    CP_FLAGS   += -Og
+# https://interrupt.memfault.com/blog/best-and-worst-gcc-clang-compiler-flags#-g3
+# extra debug definitions, including macro definition
     CP_FLAGS   += -g3
 else
+# optimize for speed and size
     CP_FLAGS   += -Os
     #CP_FLAGS += -flto # link time optimizer. for the tests i did, it infact increased memory usage
 endif
-
-CP_FLAGS += -ffunction-sections # # Generate separate ELF section for each function.
+# # Generate separate ELF section for each function.
 # usefull for static libraries since it possible to benefit from more efficient dead code removal.
 # check https://elinux.org/images/2/2d/ELC2010-gc-sections_Denys_Vlasenko.pdf for more
-CP_FLAGS += -fdata-sections  # # Enable elf section per variable
+# https://interrupt.memfault.com/blog/best-and-worst-gcc-clang-compiler-flags#-ffunction-sections--fdata-sections----gc-sections
+CP_FLAGS += -ffunction-sections
+# Enable elf section per variable
+CP_FLAGS += -fdata-sections
+#https://interrupt.memfault.com/blog/best-and-worst-gcc-clang-compiler-flags#-fstack-usage---wstack-usage
+#https://stackoverflow.com/questions/6387614/how-to-determine-maximum-stack-usage-in-embedded-system-with-gcc
+# used to monitor stack space in a function and emit warnings when the usage is too high.
+# -fstack-usage flag generates a .su files for each compiled c file.
+CP_FLAGS  += -fstack-usage
 
-LD_FLAGS += -specs=nosys.specs  # Stub library with empty definitions for POSIX functions
-LD_FLAGS += -specs=nano.specs # newlibnano https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
-#LD_FLAGS += -Wl,--verbose #  gcc enables verbose linker output
-LD_FLAGS += -Wextra -Wall # extra messages
+
+# Stub library with empty definitions for POSIX functions
+LD_FLAGS += -specs=nosys.specs
+# newlibnano https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
+LD_FLAGS += -specs=nano.specs
+# gcc enables verbose linker output
+#LD_FLAGS += -Wl,--verbose
+# extra messages
+LD_FLAGS += -Wextra -Wall
+# Generate separate ELF section for each function. usefull for static libraries
 #https://interrupt.memfault.com/blog/get-the-most-out-of-the-linker-map-file
-# http://blog.atollic.com/the-ultimate-guide-to-reducing-code-size-with-gnu-gcc-for-arm-cortex-m
+#http://blog.atollic.com/the-ultimate-guide-to-reducing-code-size-with-gnu-gcc-for-arm-cortex-m
 #https://stackoverflow.com/questions/4274804/query-on-ffunction-section-fdata-sections-options-of-gcc
-LD_FLAGS += -ffunction-sections # # Generate separate ELF section for each function. usefull for static libraries
-LD_FLAGS += -fdata-sections  # # Enable elf section per variable
-#LD_FLAGS += -flto # link time optimizer. for the tests i did, it infact increased memory usage
-#LD_FLAGS += -Xlinker --print-gc-sections # shows the removed sections. uncommnet it just if you want the investigate the removed sections
-LD_FLAGS += -Wl,-Map=${PROJECT_NAME}.map # Generate a memory map. The map file is a symbol table for the whole program
+LD_FLAGS += -ffunction-sections
+# Enable elf section per variable
+LD_FLAGS += -fdata-sections
+# Generate a memory map. The map file is a symbol table for the whole program
+LD_FLAGS += -Wl,-Map=${PROJECT_NAME}.map
 #LD_FLAGS += -Wl,--print-memory-usage # prints something like this
 #Memory region         Used Size  Region Size  %age Used
 #             rom:       10800 B       256 KB      4.12%
@@ -94,6 +109,15 @@ endif
 ifdef DEVICE_STARTUP
 	ASM_SRC  += $(DEVICE_STARTUP)
 endif
+
+# the -Wstack-usage flag will make sure that the stack limit is not hit
+ifndef STACK_SIZE
+    $(error Please set the required STACK_SIZE variable in your makefile.)
+else
+	# -Wstack-usage=<stack_limit> emit a warning when stack usage exceeds a certain value
+	CP_FLAGS  += -Wstack-usage=$(STACK_SIZE)
+endif
+
 
 # insert -I in front of every folder in INCLUDE_DIRS
 INC_DIR  = $(patsubst %, -I%, $(INCLUDE_DIRS))
@@ -200,6 +224,7 @@ erase:
 clean:
 	$(Q)-rm -rf $(OBJECTS)
 	$(Q)-find . -type f -name '*.o' -delete
+	$(Q)-find . -type f -name '*.su' -delete
 	$(Q)-rm -rf $(BUILD_DIR)
 	$(Q)-rm -rf $(PROJECT_NAME).elf
 	$(Q)-rm -rf $(PROJECT_NAME).map

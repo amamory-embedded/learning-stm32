@@ -33,9 +33,21 @@ ASM_SRC +=
 DDEFS ?=
 DDEFS += -DSTM32F1
 
+# insert the max size of the stack. the -Wstack-usage flag will make sure that this limit is not hit
+STACK_SIZE = 255
+
 # add here any additional flags for compilation and linking
 AS_FLAGS  +=
 CP_FLAGS  +=
+#enables a base set of warnings generally agreed upon as being useful
+CP_FLAGS += -Wall
+#enables an additional set of flags not covered by -Wall
+CP_FLAGS += -Wextra
+#causes all enabled warnings to cause compilation errors.
+CP_FLAGS += -Werror
 CXX_FLAGS +=
-LD_FLAGS  += -nostartfiles # No standard lib startup files
-LD_FLAGS  += -Xlinker --gc-sections ## Perform dead-code elimination
+# No standard lib startup files
+LD_FLAGS  += -nostartfiles
+LD_FLAGS  += -nostdlib
+## Perform dead-code elimination
+LD_FLAGS  += -Xlinker --gc-sections

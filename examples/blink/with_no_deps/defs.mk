@@ -18,7 +18,6 @@ LIBRARY_NAMES +=
 
 # insert here the C source file list
 SRC ?=
-#SRC += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/*.c
 SRC += ./*.c
 # you can also add cpp files
 #SRC += ./*.cpp
@@ -33,10 +32,23 @@ ASM_SRC +=
 # insert here the lib's scpecific defines
 DDEFS ?=
 
+# insert the max size of the stack. the -Wstack-usage flag will make sure that this limit is not hit
+STACK_SIZE = 255
+
 # add here any additional flags for compilation and linking
 AS_FLAGS  +=
 CP_FLAGS  +=
+#enables a base set of warnings generally agreed upon as being useful
+CP_FLAGS += -Wall
+#enables an additional set of flags not covered by -Wall
+CP_FLAGS += -Wextra
+#causes all enabled warnings to cause compilation errors.
+CP_FLAGS += -Werror
 CXX_FLAGS +=
+# This tells GCC to ignore everything it knows about where to find header files and libraries and instead uses what you tell it
+# it does not include  crtbegin.o, crt1.o, crti.o, crtend.o, crtn.o
+# http://cs107e.github.io/guides/gcc/
 LD_FLAGS  += -nostdlib
+# The -ffreestanding option also directs the compiler to not assume that standard functions have their usual definitions.
 # this option must be commented because it eliminates too much code
 #LD_FLAGS  += -Xlinker --gc-sections ## Perform dead-code elimination
