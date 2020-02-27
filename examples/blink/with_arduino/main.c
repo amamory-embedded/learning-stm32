@@ -1,6 +1,6 @@
 /*
 this example assumes you have https://github.com/stm32duino/Arduino_Core_STM32/releases/tag/1.8.0
-installed.
+and https://github.com/arduino/arduino-cli/releases/tag/0.9.0 installed.
 
 See the description in the readme.md file
 */
