@@ -5,11 +5,31 @@ https://github.com/amamory/Awesome-Embedded
 https://github.com/gurugio/lowlevelprogramming-university
 http://sijinjoseph.com/programmer-competency-matrix/
 
+doc baseado em formato MD
+https://github.com/umanovskis/baremetal-arm/blob/master/doc/build-ebook.sh
+
 ## background
 
 https://medium.com/@xsumirx/gnu-linker-script-and-memory-relocation-for-embedded-devices-5d3d16d1f0
 
+### Startup Code
 
+https://barrgroup.com/embedded-systems/books/programming-embedded-systems/compiling-linking-locating
+Startup code for C/C++ programs usually consists of the following actions, performed in the order described:
+
+    Disable all interrupts.
+    Copy any initialized data from ROM to RAM.
+    Zero the uninitialized data area.
+    Allocate space for and initialize the stack.
+    Initialize the processor’s stack pointer.
+    Create and initialize the heap.
+    Execute the constructors and initializers for all global variables (C++ only).
+    Enable interrupts.
+    Call main.
+    Call Destructors (C++ only)
+
+startup code em C
+http://pandafruits.com/stm32_primer/stm32_primer_lib.php
 
 
 ## selecting a device
@@ -27,6 +47,11 @@ If you does like this, there will be no regrest in the future.
 It turns out that you can spend ZERO to start learning embedded prograaming. QEMU has been ported to few embedded boards such as ....
 Using [QEMU](qemu.md) was my first step, and the examples I built are available here. But i have to say that i didnt go too much further in this direction.
 I want to do somthing more physical, at least some blinking LEDs.
+
+Bare-metal programming for ARM: A hands-on guide
+Daniels Umanovskis
+book using QEMU for ARM bare metal programming
+https://github.com/umanovskis/baremetal-arm
 
 For my first actual ARM-based board, I chose one of the simplest and cheapsts boards called [STM32F103C8T6](https://www.st.com/en/microcontrollers-microprocessors/stm32f103c8.html), or blue pill.
 There are tons of places describing the resources available in this little board. So I won't describe it here but it is relevant to compare it with the Arduino boards.

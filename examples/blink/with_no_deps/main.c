@@ -1,6 +1,13 @@
 /************************************
  * stm32 minimal example - Blink LED
 source : https://github.com/hg2ecz/stm32f103-minimal-examples/tree/master/01_blink_led
+other interesing examples:
+https://github.com/hg2ecz/stm32f103-minimal-examples/tree/master/02_blink_led-func
+https://github.com/trebisky/stm32f103/blob/master/blink1/blink.c
+https://renato-aquino.blogspot.com/2018/01/take-blue-pill.html
+https://github.com/renatoaquino/stm32blink/blob/master/raw/main.c
+https://github.com/mareq/blue-pill_mini-blink/blob/master/src/main.c
+https://github.com/trebisky/stm32f103/tree/master/blink1
  ************************************/
 
 /* memory and peripheral start addresses */

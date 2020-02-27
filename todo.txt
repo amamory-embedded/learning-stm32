@@ -2,10 +2,13 @@ TODO
 
 - compilar lib com e sem debug
 - como compilar opencm3 p debug mode e c stack check ?
-- fazer with_arduino
 - fazer with_freertos
+https://github.com/fabiovila/bluepill-freertos/tree/master/Src
+https://github.com/yohanes-erwin/stm32f103-keil/blob/master/freertos-led/main.c
 - make a c++ version based on the book "Real-Time C++: Efficient Object-Oriented and Template Microcontroller"
 - include examples with rust
+- cmake
+https://github.com/wangxian0718/STM32F1-FreeRTOS-Template
 
 estudar sites:
 https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
@@ -20,6 +23,26 @@ https://github.com/HBehrens/puncover
 
 this makes clear what GCC macros will be set automatically and the value.
 arm-none-eabi-gcc -E -dM - < /dev/null
+
+exemplos c timer
+https://rhye.org/post/stm32-with-opencm3-0-compiling-and-uploading/
+https://github.com/szczys/bluepill-opencm3/blob/master/examples/systick/systick_example.c
+
+exemplos c serial
+https://github.com/szczys/bluepill-opencm3/tree/master/examples
+
+google : dynamic linked code for embedded systems stm32 rtos
+Dynamic Linking with the ARM Compiler toolchain - Application Note 242
+https://github.com/bogdanm/udynlink
+https://github.com/ESLab/rtdl
+https://sourceware.org/binutils/docs/ld/Overlay-Description.html
+Lightweight Framework for Runtime Updating of C-Based Software in Embedded Systems
+Lightweight IO Virtualization On MPU Enabled Microcontrollers
+Using Dynamic Libraries in Embedded Systems - Peter C. Dibble
+
+hypervisor for cortex m3
+https://github.com/ARMmbed/uvisor
+https://github.com/pierpaolobagnasco/hyperos
 
 lower priority issues
 - update std_periph to v3.6.1 - the oficial in the STM site is still 3.5.0
