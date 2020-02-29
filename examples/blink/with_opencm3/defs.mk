@@ -1,20 +1,29 @@
+###############################################################################
+#
+# Makefile for compiling STM32F1xx devices, specially, STM32F103C8T6 or bluepill
+# Copyright (C) 2020 Alexandre Amory <amamory@gmail.com>
+#
+###############################################################################
+# RELEVANT VARIABLES:
+#
+# Insert here only the defitions strictly related to the application itself.
+# Do not add here definitions required by lower level libs. These lib's definitions
+# are already defined in  $LEARNING_STM32/config/<lib_name>.mk
+#
+# The following variable at the end of this file informs the app's depedency.
+# For example:
+#
+#   USE_MODULE += opencm3
+#
+###############################################################################
+
 # the name of the executable or lib file
 PROJECT_NAME = main
 
 LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 
-# startup file and linker script
-DEVICE_STARTUP =
-LINK_SCRIPT = ./stm32f103x8.ld
-
 # insert here the lib's include dirs
-INCLUDE_DIRS += $(LEARNING_STM32)/libs/libopencm3/include
-
-# insert here the dir to any required library
-LIBRARY_DIRS += $(LEARNING_STM32)/libs/libopencm3/lib
-
-# insert here the names of the required library
-LIBRARY_NAMES += opencm3_stm32f1
+INCLUDE_DIRS += ./
 
 # insert here the C source file list
 SRC ?=
@@ -31,7 +40,6 @@ ASM_SRC +=
 
 # insert here the lib's scpecific defines
 DDEFS ?=
-DDEFS += -DSTM32F1
 
 # insert the max size of the stack. the -Wstack-usage flag will make sure that this limit is not hit
 STACK_SIZE = 255
@@ -46,8 +54,7 @@ CP_FLAGS += -Wextra
 #causes all enabled warnings to cause compilation errors.
 CP_FLAGS += -Werror
 CXX_FLAGS +=
-# No standard lib startup files
-LD_FLAGS  += -nostartfiles
-LD_FLAGS  += -nostdlib
-## Perform dead-code elimination
-LD_FLAGS  += -Xlinker --gc-sections
+LD_FLAGS  +=
+
+# this variable says that this app depends on opncm3 and aditional definitions will be inserted for compilation
+USE_MODULE += opencm3

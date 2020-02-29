@@ -165,6 +165,8 @@ The following list of versions of the blinking LED is not exaustive, but I belie
 - [Assembly](the_fifty_shades_of_blink.md#asm)
 - [Freertos](the_fifty_shades_of_blink.md#freertos)
 - [Zephyr](the_fifty_shades_of_blink.md#zephyr)
+- [RIOT](the_fifty_shades_of_blink.md#riot)
+
 
 ## Debugging STM32 with GDB
 

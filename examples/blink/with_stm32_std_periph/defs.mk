@@ -1,23 +1,29 @@
+###############################################################################
+#
+# Makefile for compiling STM32F1xx devices, specially, STM32F103C8T6 or bluepill
+# Copyright (C) 2020 Alexandre Amory <amamory@gmail.com>
+#
+###############################################################################
+# RELEVANT VARIABLES:
+#
+# Insert here only the defitions strictly related to the application itself.
+# Do not add here definitions required by lower level libs. These lib's definitions
+# are already defined in  $LEARNING_STM32/config/<lib_name>.mk
+#
+# The following variable at the end of this file informs the app's depedency.
+# For example:
+#
+#   USE_MODULE += opencm3
+#
+###############################################################################
+
 # the name of the executable or lib file
 PROJECT_NAME = main
 
 LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 
-# startup and linker script files
-DEVICE_STARTUP = ./startup_stm32f10x_md.s
-LINK_SCRIPT = ./stm32_flash.ld
-
 # insert here the lib's include dirs
-INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32F10x_StdPeriph_Lib_V3.5.0/Libraries/CMSIS/CM3/CoreSupport
-INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32F10x_StdPeriph_Lib_V3.5.0/Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x
-INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32F10x_StdPeriph_Lib_V3.5.0/Libraries/STM32F10x_StdPeriph_Driver/inc
-INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32F10x_StdPeriph_Lib_V3.5.0/.
-
-# insert here the dir to any required library
-LIBRARY_DIRS += $(LEARNING_STM32)/libs/STM32F10x_StdPeriph_Lib_V3.5.0/
-
-# insert here the names of the required library
-LIBRARY_NAMES += StdPeriph
+INCLUDE_DIRS +=
 
 # insert here the C source file list
 SRC ?=
@@ -33,8 +39,7 @@ ASM_SRC +=
 #SRC := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 
 # insert here the lib's scpecific defines
-DDEFS ?=
-DDEFS += -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=8000000 -DRUN_FROM_FLASH=1
+DDEFS +=
 
 # insert the max size of the stack. the -Wstack-usage flag will make sure that this limit is not hit
 STACK_SIZE = 255
@@ -50,8 +55,6 @@ CP_FLAGS += -Wextra
 #CP_FLAGS += -Werror
 CXX_FLAGS +=
 LD_FLAGS  +=
-# No standard lib startup files
-LD_FLAGS  += -nostdlib
-LD_FLAGS  += -Xlinker --gc-sections ## Perform dead-code elimination
-# shows the removed sections. uncommnet it just if you want the investigate the removed sections
-#LD_FLAGS += -Xlinker --print-gc-sections
+
+# this variable says that this app depends on opncm3 and aditional definitions will be inserted for compilation
+USE_MODULE += stm32_std_periph

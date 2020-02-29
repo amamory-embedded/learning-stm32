@@ -1,3 +1,30 @@
+
+###############################################################################
+#
+# Makefile for compiling STM32F1xx devices, specially, STM32F103C8T6 or bluepill
+# Copyright (C) 2020 Alexandre Amory <amamory@gmail.com>
+#
+###############################################################################
+# RELEVANT VARIABLES:
+#
+# In the TERMINAL, point the LEARNING_STM32 to the directory of the base project.
+# For example:
+#
+#    $ export LEARNING_STM32=$HOME/learning-stm32
+#
+# Alternatively, you can also set this variable in the ~/.bashrc file.
+#
+#
+# In the MAKE command, it is possible to define the other relevant variables:
+#
+#    V=1 : enables verbose mode
+#    DEBUG=1: enables debug mode. Otherwise, the code is optimized for size
+#
+# Usage example:
+#    $ make V=1 <=== enables verbose mode
+#    $ make DEBUG=1 V=1 <=== enables both verbose and debug modes
+###############################################################################
+
 LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 #DEBUG	  = 1
 
@@ -86,8 +113,10 @@ LD_FLAGS += -Wl,-Map=${PROJECT_NAME}.map
 #             rom:       10800 B       256 KB      4.12%
 #             ram:        8376 B        32 KB     25.56%
 
+#include the apps specific definitions
 include $(PWD)/defs.mk
-
+# include the apps depedency modules
+$(foreach module,$(USE_MODULE),$(eval include $(LEARNING_STM32)/config/$(module).mk))
 #$(info $$INCLUDE_DIRS is [${INCLUDE_DIRS}])
 
 # check variables in the included makefile

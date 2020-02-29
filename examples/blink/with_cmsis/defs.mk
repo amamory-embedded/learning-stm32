@@ -1,25 +1,29 @@
+###############################################################################
+#
+# Makefile for compiling STM32F1xx devices, specially, STM32F103C8T6 or bluepill
+# Copyright (C) 2020 Alexandre Amory <amamory@gmail.com>
+#
+###############################################################################
+# RELEVANT VARIABLES:
+#
+# Insert here only the defitions strictly related to the application itself.
+# Do not add here definitions required by lower level libs. These lib's definitions
+# are already defined in  $LEARNING_STM32/config/<lib_name>.mk
+#
+# The following variable at the end of this file informs the app's depedency.
+# For example:
+#
+#   USE_MODULE += opencm3
+#
+###############################################################################
+
 # the name of the executable or lib file
 PROJECT_NAME = main
 
 LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 
-# startup file and linker script
-DEVICE_STARTUP = ./startup.s
-LINK_SCRIPT = ./link_script.ld
-
 # insert here the lib's include dirs
-INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Core/Include
-INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Include
-INCLUDE_DIRS += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/STM32F1xx_HAL_Driver/Inc
-#INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/
-#INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/include/
-#INCLUDE_DIRS += ./Middlewares/Third_Party/FreeRTOS/Source/portable/GCC/ARM_CM3
-
-# insert here the dir to any required library
-LIBRARY_DIRS +=
-
-# insert here the names of the required library
-LIBRARY_NAMES +=
+INCLUDE_DIRS +=
 
 # insert here the C source file list
 SRC ?=
@@ -37,9 +41,6 @@ ASM_SRC +=
 
 # insert here the lib's scpecific defines
 DDEFS ?=
-#DDEFS += -DHSE_VALUE=8000000 -DSTM32F1 -DUSE_HAL_DRIVER -DSTM32F103x6
-DDEFS += -DSTM32F103x6
-
 # insert the max size of the stack. the -Wstack-usage flag will make sure that this limit is not hit
 STACK_SIZE = 255
 
@@ -54,9 +55,6 @@ CP_FLAGS += -Wextra
 CP_FLAGS += -Werror
 CXX_FLAGS +=
 LD_FLAGS  +=
-# This tells GCC to ignore everything it knows about where to find header files and libraries and instead uses what you tell it
-# it does not include  crtbegin.o, crt1.o, crti.o, crtend.o, crtn.o
-# http://cs107e.github.io/guides/gcc/
-LD_FLAGS  += -nostdlib
-## Perform dead-code elimination
-LD_FLAGS  += -Xlinker --gc-sections
+
+# this variable says that this app depends on opncm3 and aditional definitions will be inserted for compilation
+USE_MODULE += cmsis

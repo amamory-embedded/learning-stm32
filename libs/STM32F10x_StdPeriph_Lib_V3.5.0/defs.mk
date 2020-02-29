@@ -1,3 +1,21 @@
+###############################################################################
+#
+# Makefile for compiling STM32F1xx devices, specially, STM32F103C8T6 or bluepill
+# Copyright (C) 2020 Alexandre Amory <amamory@gmail.com>
+#
+###############################################################################
+# RELEVANT VARIABLES:
+#
+# These are the definitions to compile the libStdPeriph static library.
+# To compile it, open a terminal in this current dir and type:
+#
+#   $ make ../../config/common.mk lib
+#
+# If you wish to create a debug version of this lib, then type:
+#
+#   $ make ../../config/common.mk lib DEBUG=1
+#
+###############################################################################
 
 #https://gist.github.com/xuhdev/1873316
 

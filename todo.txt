@@ -31,6 +31,11 @@ https://github.com/szczys/bluepill-opencm3/blob/master/examples/systick/systick_
 exemplos c serial
 https://github.com/szczys/bluepill-opencm3/tree/master/examples
 
+outros RTOSs
+https://github.com/RIOT-OS/RIOT/tree/master/boards/bluepill
+https://github.com/zephyrproject-rtos/zephyr/tree/master/boards/arm/stm3210c_eval
+
+
 google : dynamic linked code for embedded systems stm32 rtos
 Dynamic Linking with the ARM Compiler toolchain - Application Note 242
 https://github.com/bogdanm/udynlink
