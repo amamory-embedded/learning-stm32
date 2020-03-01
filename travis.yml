@@ -10,9 +10,11 @@ compiler:
   - arm-none-eabi-gcc
 
 env:
+  - echo $(PWD)
   - LEARNING_STM32=$(PWD)
 
 script:
+  - echo $(PWD)
   - make
 
 notifications:
