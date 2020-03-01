@@ -1,6 +1,5 @@
 language: c
 dist: trusty
-
 sudo: required
 
 before_install:
@@ -9,6 +8,9 @@ before_install:
 
 compiler:
   - arm-none-eabi-gcc
+
+env:
+  - LEARNING_STM32=$(PWD)
 
 script:
   - make
