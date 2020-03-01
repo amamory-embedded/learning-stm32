@@ -1,3 +1,4 @@
+/*
 // source based on https://github.com/WRansohoff/min_freertos_blink/blob/master/src/main.cpp
 #include <libopencm3/stm32/rcc.h>
 #include <libopencm3/stm32/gpio.h>
@@ -5,14 +6,22 @@
 #include "task.h"
 #include "croutine.h"
 
+// Quick and dirty delay
+void delay(){
+    for (int i=0; i<1000000; i++) {
+        __asm__("nop");
+    }
+}
+
 // 'Blink LED' task.
 static void led_task(void *args) {
   int delay_ms = *(int*)args;
 
   while (1) {
     // Toggle the LED.
-    // Reset the state of pin 13 to output low
     gpio_toggle(GPIOC, GPIO13);
+    delay();
+
     // Delay for a second-ish.
     vTaskDelay(pdMS_TO_TICKS(delay_ms));
   };
@@ -41,7 +50,7 @@ int main (void) {
 
     // Create the LED tasks.
     xTaskCreate(led_task, "LED_blink_1", 128, (void*)&led_delay_1, configMAX_PRIORITIES-1, NULL);
-    xTaskCreate(led_task, "LED_blink_2", 128, (void*)&led_delay_2, configMAX_PRIORITIES-1, NULL);
+    //xTaskCreate(led_task, "LED_blink_2", 128, (void*)&led_delay_2, configMAX_PRIORITIES-1, NULL);
     // Start the scheduler.
     vTaskStartScheduler();
 
@@ -49,4 +58,42 @@ int main (void) {
   // should be in charge of the program's execution after starting.
   while (1) {}
   return 0;
+}
+
+*/
+
+//#include <stdlib.h>
+//https://github.com/dimtass/stm32f103-cmake-template/blob/master/source/src_freertos/main.c
+#include <FreeRTOS.h>
+#include <task.h>
+
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
+
+int k = 0;
+
+void task_blink(void *args __attribute__((unused)))
+{
+    while (1)
+    {
+        gpio_toggle(GPIOC, GPIO13);
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
+}
+
+int main(void)
+{
+    rcc_clock_setup_in_hse_8mhz_out_72mhz();
+    rcc_periph_clock_enable(RCC_GPIOC);
+    gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ, GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
+    //gpio_set(GPIOC, GPIO13); // Turn off
+
+    //int *test_var = malloc(sizeof(int));
+    //*test_var = 5;
+
+    xTaskCreate(task_blink, "blink", 100, NULL, configMAX_PRIORITIES - 1, NULL);
+    vTaskStartScheduler();
+
+    while (1);
+    return 0;
 }

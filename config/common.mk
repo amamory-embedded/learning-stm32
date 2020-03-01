@@ -184,14 +184,14 @@ OBJECTS  = $(ASM_FILES:.s=.o) $(SRC_FILES:.c=.o)
 # makefile rules
 #
 all: init_rule $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAME).bin
-	@echo "\\033[1;33m \t\t----------COMPILATION FINISHED---------- \\033[0;39m"
+	@echo "\\033[1;33m \t----------COMPILATION FINISHED---------- \\033[0;39m"
 	@printf "\n  SIZE        $(PROJECT_NAME).elf\n"
 	$(Q)$(SIZE) $(PROJECT_NAME).elf
 	@printf "  MEM REPORT  $(PROJECT_NAME).elf\n"
 	$(Q)python $(LEARNING_STM32)/utils/linker-map-summary/analyze_map.py $(PROJECT_NAME).map
 	@printf "\n"
 	$(Q)$(SIZE_SCRIPT)	$(PROJECT_NAME).elf 0x10000 0x5000
-	@echo "\\033[1;33m \t\t----------REPORTS FINISHED----------- \\033[0;39m"
+	@echo "\\033[1;33m \t----------REPORTS FINISHED----------- \\033[0;39m"
 
 %.o: %.c | $(OBJ_FOLDER)
 	@printf "  CC      $<\n"
@@ -218,7 +218,7 @@ all: init_rule $(OBJECTS) $(PROJECT_NAME).elf  $(PROJECT_NAME).hex $(PROJECT_NAM
 	$(Q)$(BIN)  $< $@
 
 init_rule:
-	@echo "\\033[1;33m \t\t----------COMPILATION STARTED----------- \\033[0;39m"
+	@echo "\\033[1;33m \t----------COMPILATION STARTED----------- \\033[0;39m"
 
 $(OBJ_FOLDER):
 	$(Q)mkdir $(BUILD_DIR)
@@ -232,7 +232,7 @@ flash: $(PROJECT_NAME).bin
 lib: init_rule $(OBJECTS)
 	@printf "\n  STATIC LIB  $(PROJECT_NAME).a\n"
 	$(Q)$(AR) -r -s $(PROJECT_NAME).a $(OBJECTS)
-	@echo "\\033[1;33m \t\t----------COMPILATION FINISHED---------- \\033[0;39m"
+	@echo "\\033[1;33m \t----------COMPILATION FINISHED---------- \\033[0;39m"
 	@printf "\n  REPORT    $(PROJECT_NAME).a\n"
 	@# reporting objs included into the static library, removed unwanted coluns with awk, and sort the objs by their sizes
 	$(Q)$(AR) -tv $(PROJECT_NAME).a | awk '{printf "%8s %s\n", $$3, $$8}' | sort -k 1n
@@ -242,7 +242,7 @@ lib: init_rule $(OBJECTS)
 	@# print the % of flash and ram usage considering 64K of flash and 20K of RAM
 	@printf "\n"
 	$(Q)$(SIZE_SCRIPT)	$(PROJECT_NAME).a 0x10000 0x5000 lib
-	@echo "\\033[1;33m \t\t----------REPORTS FINISHED----------- \\033[0;39m"
+	@echo "\\033[1;33m \t----------REPORTS FINISHED----------- \\033[0;39m"
 
 debug:	$(PROJECT_NAME).elf
 	$(GDB) --eval-command="target extended-remote :4242" $(PROJECT_NAME).elf
@@ -260,5 +260,5 @@ clean:
 	$(Q)-rm -rf $(PROJECT_NAME).hex
 	$(Q)-rm -rf $(PROJECT_NAME).bin
 	$(Q)-rm -rf $(PROJECT_NAME).a
-	@echo "\\033[1;33m \t\t----------DONE CLEANING----------------- \\033[0;39m"
+	@echo "\\033[1;33m \t----------DONE CLEANING----------------- \\033[0;39m"
 

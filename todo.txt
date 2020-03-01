@@ -9,6 +9,8 @@ https://github.com/yohanes-erwin/stm32f103-keil/blob/master/freertos-led/main.c
 - include examples with rust
 - cmake
 https://github.com/wangxian0718/STM32F1-FreeRTOS-Template
+https://github.com/dimtass/stm32f103-cmake-template
+https://bitbucket.org/dimtass/stm32f103-cmake-template/src/master/
 
 estudar sites:
 https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
