@@ -55,6 +55,8 @@ CP_FLAGS += -Wextra
 CP_FLAGS += -Werror
 CXX_FLAGS +=
 LD_FLAGS  +=
+LD_FLAGS  += -nostartfiles
+LD_FLAGS  += -nostdlib
 
 # this variable says that this app depends on opncm3 and aditional definitions will be inserted for compilation
 USE_MODULE += opencm3

@@ -41,9 +41,5 @@ AS_FLAGS  +=
 CP_FLAGS  +=
 CXX_FLAGS +=
 LD_FLAGS  +=
-# This tells GCC to ignore everything it knows about where to find header files and libraries and instead uses what you tell it
-# it does not include  crtbegin.o, crt1.o, crti.o, crtend.o, crtn.o
-# http://cs107e.github.io/guides/gcc/
-LD_FLAGS  += -nostdlib
 ## Perform dead-code elimination
 LD_FLAGS  += -Xlinker --gc-sections

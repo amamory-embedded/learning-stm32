@@ -1,15 +1,9 @@
 // source based on https://github.com/WRansohoff/min_freertos_blink/blob/master/src/main.cpp
-#include "stm32f1xx.h"
+#include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/gpio.h>
 #include "FreeRTOS.h"
 #include "task.h"
 #include "croutine.h"
-
-// Quick and dirty delay
-void delay(){
-    for (int i=0; i<1000000; i++) {
-        __asm__("nop");
-    }
-}
 
 // 'Blink LED' task.
 static void led_task(void *args) {
@@ -18,23 +12,24 @@ static void led_task(void *args) {
   while (1) {
     // Toggle the LED.
     // Reset the state of pin 13 to output low
-    GPIOC->BSRR = GPIO_BSRR_BS13;
-    delay();
-    // Set the state of pin 13 to output high
-    GPIOC->BRR = GPIO_BSRR_BS13;
-    delay();
+    gpio_toggle(GPIOC, GPIO13);
     // Delay for a second-ish.
     vTaskDelay(pdMS_TO_TICKS(delay_ms));
   };
 }
 
 void led_setup() {
-    // Turn on the GPIOC peripheral
-    RCC->APB2ENR |= RCC_APB2ENR_IOPCEN;
-    // Put pin 13 in general purpose push-pull mode
-    GPIOC->CRH &= ~(GPIO_CRH_CNF13);
-    // Set the output mode to max. 2MHz
-    GPIOC->CRH |= GPIO_CRH_MODE13_1;
+    // First, let's ensure that our clock is running off the high-speed
+    // internal oscillator (HSI) at 48MHz
+    rcc_clock_setup_in_hsi_out_48mhz();
+
+    // Since our LED is on GPIO bank A, we need to enable
+    // the peripheral clock to this GPIO bank in order to use it.
+    rcc_periph_clock_enable(RCC_GPIOC);
+
+    // Our test LED is connected to Port A pin 11, so let's set it as output
+    gpio_set_mode(GPIOC, GPIO_MODE_OUTPUT_2_MHZ,
+              GPIO_CNF_OUTPUT_PUSHPULL, GPIO13);
 }
 
 // LED delay timings.
