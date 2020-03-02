@@ -1,19 +1,12 @@
 language: c
-dist: trusty
-sudo: required
-
-before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y gcc-arm-none-eabi
-  - arm-none-eabi-gcc --version
-
-#compiler:
-#  - arm-none-eabi-gcc
-
 script:
   - echo $(PWD)
   - export LEARNING_STM32=$(PWD)
   - make
 
-notifications:
-  email: true
+addons:
+  apt:
+    sources:
+    - sourceline: 'ppa:team-gcc-arm-embedded/ppa'
+    packages:
+    - gcc-arm-embedded
