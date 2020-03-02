@@ -25,9 +25,6 @@
 #    $ make DEBUG=1 V=1 <=== enables both verbose and debug modes
 ###############################################################################
 
-LEARNING_STM32 = /home/lsa/stm32/learning-stm32
-#DEBUG	  = 1
-
 # testing the requirements
 ifndef LEARNING_STM32
     $(error LEARNING_STM32 is undefined)

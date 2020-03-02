@@ -1,7 +1,24 @@
+###############################################################################
+#
+# Makefile for compiling STM32F1xx devices, specially, STM32F103C8T6 or bluepill
+# Copyright (C) 2020 Alexandre Amory <amamory@gmail.com>
+#
+###############################################################################
+# RELEVANT VARIABLES:
+#
+# Insert here only the defitions strictly related to the application itself.
+# Do not add here definitions required by lower level libs. These lib's definitions
+# are already defined in  $LEARNING_STM32/config/<lib_name>.mk
+#
+# The following variable at the end of this file informs the app's depedency.
+# For example:
+#
+#   USE_MODULE += opencm3
+#
+###############################################################################
+
 # the name of the executable or lib file
 PROJECT_NAME = main
-
-LEARNING_STM32 = /home/lsa/stm32/learning-stm32
 
 # startup file and linker script
 DEVICE_STARTUP =

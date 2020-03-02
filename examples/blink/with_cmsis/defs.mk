@@ -20,8 +20,6 @@
 # the name of the executable or lib file
 PROJECT_NAME = main
 
-LEARNING_STM32 = /home/lsa/stm32/learning-stm32
-
 # insert here the lib's include dirs
 INCLUDE_DIRS +=
 
