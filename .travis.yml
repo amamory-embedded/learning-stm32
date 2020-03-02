@@ -6,5 +6,10 @@ script:
   - make
 
 before_install:
-  - sudo apt-get -qq update
-  - sudo apt-get install -y gcc-arm-none-eabi
+  # get the latest compiliers from ARM website. 
+  # check for newer versions regularly at 
+  # https://developer.arm.com/tools-and-software/open-source-software/developer-tools/gnu-toolchain/gnu-rm/downloads
+  - wget -q https://developer.arm.com/-/media/Files/downloads/gnu-rm/9-2019q4/gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2
+  - tar xjf gcc-arm-none-eabi-9-2019-q4-major-x86_64-linux.tar.bz2
+  - mv gcc-arm-none-eabi-9-2019-q4-major gcc-arm
+  - export PATH=$PWD/gcc-arm/bin:$PATH
