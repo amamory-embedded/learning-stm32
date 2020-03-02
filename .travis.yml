@@ -1,7 +1,7 @@
 language: c
 script:
-  - echo $(PWD)
-  - export LEARNING_STM32=$(PWD)
+  - echo $(TRAVIS_BUILD_DIR)
+  - export LEARNING_STM32=$(TRAVIS_BUILD_DIR)
   - make
 
 addons:
