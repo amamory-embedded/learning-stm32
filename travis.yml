@@ -5,16 +5,14 @@ sudo: required
 before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y gcc-arm-none-eabi
+  - arm-none-eabi-gcc --version
 
-compiler:
-  - arm-none-eabi-gcc
-
-env:
-  - echo $(PWD)
-  - LEARNING_STM32=$(PWD)
+#compiler:
+#  - arm-none-eabi-gcc
 
 script:
   - echo $(PWD)
+  - export LEARNING_STM32=$(PWD)
   - make
 
 notifications:
