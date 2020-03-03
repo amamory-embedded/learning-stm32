@@ -9,26 +9,17 @@
 # Makefile that iterates over the list of variations of the same example
 #
 ###############################################################################
-
-# these dirs dont have makefile
-EXCLUDE_DIR_LIST = with_arduino
-EXCLUDE_DIR_STR  = $(patsubst %, -name %, $(EXCLUDE_DIR_LIST))
-
-#creating the list of things to be compiled
-EXAMPLE_DIRS := $(shell find ./* -type d \( ! $(EXCLUDE_DIR_STR) \) -print)
-#$(info $$EXAMPLE_DIRS is [${EXAMPLE_DIRS}])
-
 MAKEFLAGS += --no-print-directory
 
 .PHONY: $(EXAMPLE_DIRS)
 
 all: $(EXAMPLE_DIRS)
+	cd libopencm3 && make all
+	cd STM32CubeF1_V1.8.0 && make lib
+	cd STM32F10x_StdPeriph_Lib_V3.5.0 && make lib
 
 clean: $(EXAMPLE_DIRS)
+	cd libopencm3 && make clean
+	cd STM32CubeF1_V1.8.0 && make clean
+	cd STM32F10x_StdPeriph_Lib_V3.5.0 && make clean
 
-list:
-	@echo $(EXAMPLE_DIRS)
-
-# MAKECMDGOALS is special variable to the list of goals you specified on the command line
-$(EXAMPLE_DIRS):
-	cd $@ && make $(MAKECMDGOALS)

@@ -1,5 +1,10 @@
 readme.md
 
+```sh
+make all
+make flash
+```
+
 ## Bare-metal C
 https://github.com/platformio/platform-ststm32/blob/master/examples/cmsis-blink/src/main.c
 https://www.embedded.com/building-bare-metal-arm-systems-with-gnu-part-1-getting-started/

@@ -1,8 +1,9 @@
 readme.md
 
-cd ../../examples/blink/with_cmsis
-make -f ../../../config/common.mk all
-make -f ../../../config/common.mk flash
+```sh
+make all
+make flash
+```
 
 ## compiling with -lto
 

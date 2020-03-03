@@ -39,9 +39,9 @@ MAKEFLAGS += --no-print-directory
 endif
 
 #creating the list of things to be compiled
-LIB_DIRS := $(shell find $(LEARNING_STM32)/libs/* -maxdepth 0 -type d)
+#LIB_DIRS := $(shell find $(LEARNING_STM32)/libs/* -maxdepth 0 -type d)
 EXAMPLE_DIRS := $(shell find $(LEARNING_STM32)/examples/* -maxdepth 0 -type d)
-ALL_DIRS :=  $(LIB_DIRS) $(EXAMPLE_DIRS)
+ALL_DIRS :=  $(LEARNING_STM32)/libs $(EXAMPLE_DIRS)
 #$(info $$ALL_DIRS is [${ALL_DIRS}])
 
 .PHONY: $(ALL_DIRS) 

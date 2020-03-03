@@ -25,6 +25,7 @@ INCLUDE_DIRS +=
 
 # insert here the C source file list
 SRC ?=
+#SRC += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/*.c
 SRC += ./*.c
 # you can also add cpp files
 #SRC += ./*.cpp
@@ -37,8 +38,7 @@ ASM_SRC +=
 #SRC := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 
 # insert here the lib's scpecific defines
-DDEFS +=
-
+DDEFS ?=
 # insert the max size of the stack. the -Wstack-usage flag will make sure that this limit is not hit
 STACK_SIZE = 255
 
@@ -50,9 +50,11 @@ CP_FLAGS += -Wall
 #enables an additional set of flags not covered by -Wall
 CP_FLAGS += -Wextra
 #causes all enabled warnings to cause compilation errors.
-#CP_FLAGS += -Werror
+CP_FLAGS += -Werror
 CXX_FLAGS +=
 LD_FLAGS  +=
 
 # this variable says that this app depends on opncm3 and aditional definitions will be inserted for compilation
-USE_MODULE += stm32_std_periph
+USE_MODULE += cmsis
+
+include ../../../config/common.mk

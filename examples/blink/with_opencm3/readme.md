@@ -1,6 +1,11 @@
 readme.md
 [libopencm3]( http://libopencm3.org/)
 
+```sh
+make all
+make flash
+```
+
 cd libs/libopencm3
 make lib TARGETS=stm32/f1
 cd ../../examples/blink/with_opencm3

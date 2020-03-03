@@ -10,6 +10,11 @@ readme.md
 https://github.com/nematix/stm32f10x-stdperiph-lib
 http://www.longlandclan.yi.org/~stuartl/stm32f10x_stdperiph_lib_um/index.html
 
+```sh
+make all
+make flash
+```
+
 cd libs/STM32F10x_StdPeriph_Lib_V3.5.0
 make -f ../../config/common.mk lib
 cd ../../examples/blink/with_stm32_std_periph

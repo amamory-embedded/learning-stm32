@@ -9,6 +9,11 @@ Description of STM32F1 HAL and low-layer drivers - UM1850
 https://github.com/platformio/platform-ststm32/blob/master/examples/stm32cube-hal-blink/src/main.c
 
 
+```sh
+make all
+make flash
+```
+
 cd libs/STM32CubeF1_V1.8.0
 make -f ../../config/common.mk lib
 cd ../../examples/blink/with_stm32_cubef1

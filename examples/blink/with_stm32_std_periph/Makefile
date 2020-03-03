@@ -20,18 +20,8 @@
 # the name of the executable or lib file
 PROJECT_NAME = main
 
-# startup file and linker script
-DEVICE_STARTUP =
-LINK_SCRIPT = ./linker_script.ld
-
 # insert here the lib's include dirs
-INCLUDE_DIRS ?=
-
-# insert here the dir to any required library
-LIBRARY_DIRS +=
-
-# insert here the names of the required library
-LIBRARY_NAMES +=
+INCLUDE_DIRS +=
 
 # insert here the C source file list
 SRC ?=
@@ -47,7 +37,7 @@ ASM_SRC +=
 #SRC := $(shell find $(SRC_DIRS) -name *.cpp -or -name *.c -or -name *.s)
 
 # insert here the lib's scpecific defines
-DDEFS ?=
+DDEFS +=
 
 # insert the max size of the stack. the -Wstack-usage flag will make sure that this limit is not hit
 STACK_SIZE = 255
@@ -60,12 +50,11 @@ CP_FLAGS += -Wall
 #enables an additional set of flags not covered by -Wall
 CP_FLAGS += -Wextra
 #causes all enabled warnings to cause compilation errors.
-CP_FLAGS += -Werror
+#CP_FLAGS += -Werror
 CXX_FLAGS +=
-# This tells GCC to ignore everything it knows about where to find header files and libraries and instead uses what you tell it
-# it does not include  crtbegin.o, crt1.o, crti.o, crtend.o, crtn.o
-# http://cs107e.github.io/guides/gcc/
-LD_FLAGS  += -nostdlib
-# The -ffreestanding option also directs the compiler to not assume that standard functions have their usual definitions.
-# this option must be commented because it eliminates too much code
-#LD_FLAGS  += -Xlinker --gc-sections ## Perform dead-code elimination
+LD_FLAGS  +=
+
+# this variable says that this app depends on opncm3 and aditional definitions will be inserted for compilation
+USE_MODULE += stm32_std_periph
+
+include ../../../config/common.mk

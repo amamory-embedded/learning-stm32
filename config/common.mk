@@ -30,16 +30,17 @@ ifndef LEARNING_STM32
     $(error LEARNING_STM32 is undefined)
 endif
 
+# check variables in the included makefile
+ifndef PROJECT_NAME
+    $(error Please set the required PROJECT_NAME variable in your makefile.)
+endif
+
 # Be silent per default, but 'make V=1' will show all compiler calls.
 ifneq ($(V),1)
 Q := @
 # Do not print "Entering directory ...".
 MAKEFLAGS += --no-print-directory
 endif
-
-# LEARNING_STM32 base folder
-BASE_HOME    = $(LEARNING_STM32)
-BUILD_DIR ?= ./build
 
 # toolchain
 TOOLCHAIN    = arm-none-eabi-
@@ -60,9 +61,9 @@ MCU      = cortex-m3
 MC_FLAGS = -mcpu=$(MCU)
 
 # base flags
-AS_FLAGS = $(MC_FLAGS) -mthumb
-CP_FLAGS = $(MC_FLAGS) -mthumb
-LD_FLAGS = $(MC_FLAGS) -mthumb
+AS_FLAGS += $(MC_FLAGS) -mthumb
+CP_FLAGS += $(MC_FLAGS) -mthumb
+LD_FLAGS += $(MC_FLAGS) -mthumb
 
 # Define optimisation level here
 ifdef DEBUG
@@ -87,7 +88,6 @@ CP_FLAGS += -fdata-sections
 # -fstack-usage flag generates a .su files for each compiled c file.
 CP_FLAGS  += -fstack-usage
 
-
 # Stub library with empty definitions for POSIX functions
 LD_FLAGS += -specs=nosys.specs
 # newlibnano https://blog.uvokchee.de/2019/07/arm-bare-metal-flags.html
@@ -111,16 +111,10 @@ LD_FLAGS += -Wl,-Map=${PROJECT_NAME}.map
 #             ram:        8376 B        32 KB     25.56%
 
 #include the apps specific definitions
-include $(PWD)/defs.mk
+#include $(PWD)/defs.mk
 # include the apps depedency modules
 $(foreach module,$(USE_MODULE),$(eval include $(LEARNING_STM32)/config/$(module).mk))
 #$(info $$INCLUDE_DIRS is [${INCLUDE_DIRS}])
-
-# check variables in the included makefile
-ifndef PROJECT_NAME
-    $(error Please set the required PROJECT_NAME variable in your makefile.)
-endif
-#$(info PROJECT_NAME = ${PROJECT_NAME})
 
 # adds -T in front of the linker script file
 ifdef LINK_SCRIPT
@@ -163,7 +157,7 @@ LD_FLAGS += $(LIB_DIR) $(LIB_NAME)
 # expand wildcards to the each source file
 #$(info $$SRC is [${SRC}])
 SRC_FILES = $(wildcard $(SRC))
-ASM_FILES += $(wildcard $(ASM_SRC))
+ASM_FILES = $(wildcard $(ASM_SRC))
 #$(info $$SRC_FILES is [${SRC_FILES}])
 #$(info $$ASM_FILES is [${ASM_FILES}])
 
@@ -172,6 +166,7 @@ OBJECTS  = $(ASM_FILES:.s=.o) $(SRC_FILES:.c=.o)
 # I was trying to place all obj files under the BUILD_DIR, similar to
 # https://spin.atomicobject.com/2016/08/26/makefile-c-projects/, but it didnt work
 # i have to try it again
+#BUILD_DIR ?= ./build
 #SRC_FILES2 = $(notdir $(SRC_FILES))
 #OBJECTS    := $(patsubst %.c,$(BUILD_DIR)/%.o,$(SRC_FILES2))
 #$(info $$OBJECTS is [${OBJECTS}])

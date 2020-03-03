@@ -6,51 +6,29 @@
 ###############################################################################
 # RELEVANT VARIABLES:
 #
-# These are the definitions to compile the libStdPeriph static library.
-# To compile it, open a terminal in this current dir and type:
+# Insert here only the defitions strictly related to the application itself.
+# Do not add here definitions required by lower level libs. These lib's definitions
+# are already defined in  $LEARNING_STM32/config/<lib_name>.mk
 #
-#   $ make ../../config/common.mk lib
+# The following variable at the end of this file informs the app's depedency.
+# For example:
 #
-# If you wish to create a debug version of this lib, then type:
-#
-#   $ make ../../config/common.mk lib DEBUG=1
+#   USE_MODULE += opencm3
 #
 ###############################################################################
 
-#https://gist.github.com/xuhdev/1873316
-
-# setting conditional
-#DEVICE = STM32F103x8
-#FLASH  = 0x08000000
-
-# does this lib depends on other libs or low level API ?
-#USE_ST_CMSIS = true
-#USE_ST_HAL   = true
-
 # the name of the executable or lib file
-PROJECT_NAME = libStdPeriph
-
-# static libs dont need statup file. so live it empty
-# Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/startup/arm
-DEVICE_STARTUP =
-
-LINK_SCRIPT =
+PROJECT_NAME = main
 
 # insert here the lib's include dirs
-INCLUDE_DIRS += ./Libraries/CMSIS/CM3/CoreSupport
-INCLUDE_DIRS += ./Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x
-INCLUDE_DIRS += ./Libraries/STM32F10x_StdPeriph_Driver/inc
-INCLUDE_DIRS += .
-
-# insert here the dir to any required library
-LIBRARY_DIRS +=
+INCLUDE_DIRS +=
 
 # insert here the C source file list
 SRC ?=
-SRC += ./Libraries/CMSIS/CM3/CoreSupport/*.c
-SRC += ./Libraries/CMSIS/CM3/DeviceSupport/ST/STM32F10x/*.c
-SRC += ./Libraries/STM32F10x_StdPeriph_Driver/src/*.c
+#SRC += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Drivers/CMSIS/Device/ST/STM32F1xx/Source/Templates/*.c
 SRC += ./*.c
+SRC += $(LEARNING_STM32)/libs/STM32CubeF1_V1.8.0/Middlewares/Third_Party/FreeRTOS/Source/portable/MemMang/heap_4.c
+
 # you can also add cpp files
 #SRC += ./*.cpp
 
@@ -63,8 +41,6 @@ ASM_SRC +=
 
 # insert here the lib's scpecific defines
 DDEFS ?=
-DDEFS += -DSTM32F10X_MD -DUSE_STDPERIPH_DRIVER -DHSE_VALUE=8000000 -DRUN_FROM_FLASH=1
-
 # insert the max size of the stack. the -Wstack-usage flag will make sure that this limit is not hit
 STACK_SIZE = 255
 
@@ -79,3 +55,12 @@ CP_FLAGS += -Wextra
 CP_FLAGS += -Werror
 CXX_FLAGS +=
 LD_FLAGS  +=
+# This tells GCC to ignore everything it knows about where to find header files and libraries and instead uses what you tell it
+# it does not include  crtbegin.o, crt1.o, crti.o, crtend.o, crtn.o
+# http://cs107e.github.io/guides/gcc/
+LD_FLAGS  += -nostdlib
+
+# this variable says that this app depends on opncm3 and aditional definitions will be inserted for compilation
+USE_MODULE += freertos
+
+include ../../../config/common.mk

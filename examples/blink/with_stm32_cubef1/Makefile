@@ -50,11 +50,11 @@ CP_FLAGS += -Wall
 #enables an additional set of flags not covered by -Wall
 CP_FLAGS += -Wextra
 #causes all enabled warnings to cause compilation errors.
-CP_FLAGS += -Werror
+#CP_FLAGS += -Werror
 CXX_FLAGS +=
 LD_FLAGS  +=
-LD_FLAGS  += -nostartfiles
-LD_FLAGS  += -nostdlib
 
 # this variable says that this app depends on opncm3 and aditional definitions will be inserted for compilation
-USE_MODULE += opencm3
+USE_MODULE += stm32_cubef1
+
+include ../../../config/common.mk
