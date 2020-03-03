@@ -8,6 +8,7 @@ https://github.com/yohanes-erwin/stm32f103-keil/blob/master/freertos-led/main.c
 - make a c++ version based on the book "Real-Time C++: Efficient Object-Oriented and Template Microcontroller"
 - include examples with rust
 - cmake
+https://github.com/Invincibl-e/stm32-cmake  <====
 https://github.com/wangxian0718/STM32F1-FreeRTOS-Template
 https://github.com/dimtass/stm32f103-cmake-template
 https://bitbucket.org/dimtass/stm32f103-cmake-template/src/master/

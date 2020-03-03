@@ -1,5 +1,14 @@
 readme.md
 
+[CMSIS and HAL](https://www.st.com/en/embedded-software/stm32cubef1.html) by STM
+https://github.com/STMicroelectronics/stm32f1xx_hal_driver
+https://github.com/STMicroelectronics/cmsis_device_f1/
+https://github.com/STMicroelectronics/STM32CubeF1
+Description of STM32F1 HAL and low-layer drivers - UM1850
+
+https://github.com/platformio/platform-ststm32/blob/master/examples/stm32cube-hal-blink/src/main.c
+
+
 cd libs/STM32CubeF1_V1.8.0
 make -f ../../config/common.mk lib
 cd ../../examples/blink/with_stm32_cubef1

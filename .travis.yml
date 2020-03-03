@@ -3,6 +3,7 @@ script:
   - echo ${TRAVIS_BUILD_DIR}
   - export LEARNING_STM32=${TRAVIS_BUILD_DIR}
   - arm-none-eabi-gcc --version
+  # for now, it is only compiling the entire code, but soon I will include some testing features here
   - make
 
 before_install:
